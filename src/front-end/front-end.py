@@ -2,18 +2,19 @@ from flask import Flask
 import requests
 import datetime
 from flask import request
-from IPython import embed
 import threading
+from flask_caching import Cache
 
 app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 '''
 Defining various urls
 '''
-edLab_url = 'http://elnux1.cs.umass.edu:34602'
-edLab_order_url = 'http://elnux2.cs.umass.edu:34601'
-local_url = 'http://0.0.0.0:34602'
-local_order_url = 'http://0.0.0.0:34601'
+# catalog_url = 'http://elnux1.cs.umass.edu:34602'
+# order_url = 'http://elnux2.cs.umass.edu:34601'
+catalog_url = 'http://0.0.0.0:34602'
+order_url = 'http://0.0.0.0:34601'
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
@@ -36,6 +37,7 @@ This function is used to search by topic
 
 
 @app.route('/search/<args>', methods=["GET"])
+@cache.memoize()
 def search(args):
 
     # note the starting time of the request
@@ -43,7 +45,7 @@ def search(args):
     request_id = request.values['request_id']
 
     # form the query url and get the result
-    query_url = edLab_url + '/query_by_subject/' + str(args)
+    query_url = catalog_url + '/query_by_subject/' + str(args)
     query_result = requests.get(url=query_url, data={'request_id': request_id})
 
     # note the request end time and calculate the difference
@@ -67,6 +69,7 @@ This function is used to query by item number
 
 
 @app.route('/lookup/<args>', methods=["GET"])
+@cache.memoize()
 def lookup(args):
 
     # note the starting time of the request
@@ -74,7 +77,7 @@ def lookup(args):
     request_id = request.values['request_id']
 
     # form the query url and get the result
-    query_url = edLab_url + '/query_by_item/' + str(args)
+    query_url = catalog_url + '/query_by_item/' + str(args)
     query_result = requests.get(url=query_url, data={'request_id': request_id})
 
     # note the request end time and calculate the difference
@@ -104,8 +107,11 @@ def buy(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
 
+    # invalidate cache
+    cache.delete_memoized(lookup, args)
+
     # form the query url and get the result
-    query_url = edLab_order_url + '/buy/' + str(args)
+    query_url = order_url + '/buy/' + str(args)
     query_result = requests.get(url=query_url, data={'request_id': request_id})
 
     # note the request end time and calculate the difference

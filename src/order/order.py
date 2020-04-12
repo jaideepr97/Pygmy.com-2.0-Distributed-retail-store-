@@ -13,8 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
 db = SQLAlchemy(app)  # defining the sqlite db
 
 # defining various urls
-edLab_url = 'http://elnux1.cs.umass.edu:34602'
-local_url = 'http://0.0.0.0:34602'
+# url = 'http://elnux1.cs.umass.edu:34602'
+url = 'http://0.0.0.0:34602'
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
@@ -74,7 +74,7 @@ def buy(args):
     request_id = request.values['request_id']
 
     # form the query url and get the result
-    query_url = edLab_url + '/query_by_item/' + str(args)
+    query_url = url + '/query_by_item/' + str(args)
     query_result = requests.get(url=query_url, data={'request_id': request_id})
     query_data = query_result.json()
 
@@ -82,7 +82,7 @@ def buy(args):
     if query_data is not None and query_data['result']['quantity'] > 0:
 
         # form the query url and get the result
-        update_url = edLab_url + '/update/' + str(args)
+        update_url = url + '/update/' + str(args)
         update_result = requests.get(url=update_url, data={'request_id': request_id})
         update_data = update_result.json()
 
