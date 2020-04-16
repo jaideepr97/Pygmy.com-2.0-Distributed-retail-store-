@@ -11,8 +11,10 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog_B.db'
 db = SQLAlchemy(app)    # defining the sqlite database
-buy_lock = threading.Lock()  # lock for updating the database
+write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
+replica_host = 'http://0.0.0.0'
+replica_port = str(sys.argv[3])
 
 '''
 This class defines the model for out catalog database, which stores the details
@@ -58,7 +60,6 @@ def shutdown_server():
 def heartbeat():
     while True:
         time.sleep(3)
-
 
 
 '''
@@ -143,7 +144,7 @@ def update(args):
     request_id = request.values['request_id']
 
     # acquire a lock on the catalog db to update the item
-    buy_lock.acquire()
+    write_lock.acquire()
 
     # query the catalog db
     catalog = db.session.query(Catalog).filter_by(id=args).with_for_update().first()
@@ -154,28 +155,38 @@ def update(args):
         # update the db, commit and release lock
         catalog.quantity -= 1
         db.session.commit()
-        buy_lock.release()
 
-        # note request end time and calculate difference
-        request_end = datetime.datetime.now()
-        request_time = request_end - request_start
+        # update the replica
+        try:
+            replica_update_request = requests.get(url=replica_host + ':' + replica_port + '/update_replica/' + str(args))
+        except Exception:
+            print('Exception occurred while writing to replica')
+        else:
+            if replica_update_request.json()['result'] == -1:
+                print('Exception occurred while writing to replica')
+        finally:
+            write_lock.release()
 
-        # acquire a lock on the file and write the time taken
-        log_lock.acquire()
-        file = open("front_end_server.txt", "a+")
-        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-        file.close()
-        log_lock.release()
+            # note request end time and calculate difference
+            request_end = datetime.datetime.now()
+            request_time = request_end - request_start
 
-        # return success with remaining stock
-        return {'result': 0, 'remaining_stock': catalog.quantity}
+            # acquire a lock on the file and write the time taken
+            log_lock.acquire()
+            file = open("front_end_server.txt", "a+")
+            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            file.close()
+            log_lock.release()
+
+            # return success with remaining stock
+            return {'result': 0, 'remaining_stock': catalog.quantity}
 
     # quantity == 0, return failure
     else:
 
         # end db session and release lock
         db.session.commit()
-        buy_lock.release()
+        write_lock.release()
 
         # note request end time and calculate difference
         request_end = datetime.datetime.now()
@@ -190,6 +201,20 @@ def update(args):
 
         # return failure
         return {'result': -1}
+
+
+@app.route('/update_replica/<int:args>', methods=['GET'])
+def update_replica(args):
+
+    try:
+        catalog = db.session.query(Catalog).filter_by(id=args).with_for_update().first()
+        catalog.quantity -= 1
+        db.session.commit()
+        print('Replica updated for id: %d' % args)
+    except Exception:
+        return {'result': -1}
+    else:
+        return {'result': 0}
 
 
 '''

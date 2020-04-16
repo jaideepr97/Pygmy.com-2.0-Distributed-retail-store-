@@ -15,20 +15,16 @@ Defining various urls
 # catalog_B_url = 'http://elnux1.cs.umass.edu:34612'
 # order_A_url = 'http://elnux2.cs.umass.edu:34601'
 # order_B_url = 'http://elnux2.cs.umass.edu:34611'
-catalog_A_url = 'http://0.0.0.0:34602'
-catalog_B_url = 'http://0.0.0.0:34612'
-order_A_url = 'http://0.0.0.0:34601'
-order_B_url = 'http://0.0.0.0:34611'
-
-catalog_url = catalog_A_url
-# catalog_url = catalog_B_url
-# order_url = order_A_url
-order_url = order_B_url
+catalog_urls = {'A': 'http://0.0.0.0:34602', 'B': 'http://0.0.0.0:34612'}
+order_urls = {'A': 'http://0.0.0.0:34601', 'B': 'http://0.0.0.0:34611'}
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
-sharedDS_lock = threading.Lock()  # lock for shared data structure for heartbeat messages
+shared_flag_lock = threading.Lock()  # lock for shared data structure for heartbeat messages (replicas_alive)
+shared_buffer_lock = threading.Lock() # lock for shared data structure for heartbeat messages (buffer)
 
 replicas_alive = {'A': True, 'B': True}
+last_order_server = 'A'
+last_catalog_server = 'A'
 
 '''
 This function is used to shut down the server
@@ -55,23 +51,37 @@ def search(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
 
-    # form the query url and get the result
-    query_url = catalog_url + '/query_by_subject/' + str(args)
-    query_result = requests.get(url=query_url, data={'request_id': request_id})
+    # form the query url using load balancing (round robin)
+    shared_flag_lock.acquire()
+    if replicas_alive[last_catalog_server]:
+        query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
+    else:
+        global last_catalog_server
+        last_catalog_server = 'A' if last_catalog_server == 'B' else 'A'
+        query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
+    last_catalog_server = 'A' if last_catalog_server == 'B' else 'A'
+    shared_flag_lock.release()
 
-    # note the request end time and calculate the difference
-    request_end = datetime.datetime.now()
-    request_time = request_end - request_start
+    # get the results
+    try:
+        query_result = requests.get(url=query_url, data={'request_id': request_id})
 
-    # acquire a lock on the file and write the time
-    log_lock.acquire()
-    file = open("front_end_server.txt", "a+")
-    file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-    file.close()
-    log_lock.release()
+        # note the request end time and calculate the difference
+        request_end = datetime.datetime.now()
+        request_time = request_end - request_start
 
-    # return the results
-    return query_result.json()
+        # acquire a lock on the file and write the time
+        log_lock.acquire()
+        file = open("front_end_server.txt", "a+")
+        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+        file.close()
+        log_lock.release()
+
+        # return the results
+        return query_result.json()
+    except Exception:
+        # TODO add to shared buffer - request failure (catalogue server down)
+        pass
 
 
 '''
@@ -87,23 +97,37 @@ def lookup(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
 
-    # form the query url and get the result
-    query_url = catalog_url + '/query_by_item/' + str(args)
-    query_result = requests.get(url=query_url, data={'request_id': request_id})
+    # form the query url using load balancing (round robin)
+    shared_flag_lock.acquire()
+    if replicas_alive[last_catalog_server]:
+        query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
+    else:
+        global last_catalog_server
+        last_catalog_server = 'A' if last_catalog_server == 'B' else 'A'
+        query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
+    last_catalog_server = 'A' if last_catalog_server == 'B' else 'A'
+    shared_flag_lock.release()
 
-    # note the request end time and calculate the difference
-    request_end = datetime.datetime.now()
-    request_time = request_end - request_start
+    # get the result
+    try:
+        query_result = requests.get(url=query_url, data={'request_id': request_id})
 
-    # acquire a lock on the file and write the time
-    log_lock.acquire()
-    file = open("front_end_server.txt", "a+")
-    file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-    file.close()
-    log_lock.release()
+        # note the request end time and calculate the difference
+        request_end = datetime.datetime.now()
+        request_time = request_end - request_start
 
-    # return the results
-    return query_result.json()
+        # acquire a lock on the file and write the time
+        log_lock.acquire()
+        file = open("front_end_server.txt", "a+")
+        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+        file.close()
+        log_lock.release()
+
+        # return the results
+        return query_result.json()
+    except Exception:
+        # TODO add to shared buffer - request failure (catalogue server down)
+        pass
 
 
 '''
@@ -121,23 +145,40 @@ def buy(args):
     # invalidate cache
     cache.delete_memoized(lookup, args)
 
-    # form the query url and get the result
-    query_url = order_url + '/buy/' + str(args)
-    query_result = requests.get(url=query_url, data={'request_id': request_id})
+    # form the query url using load balancing (round robin)
+    shared_flag_lock.acquire()
+    if replicas_alive[last_order_server]:
+        query_url = order_urls[last_order_server] + '/buy/' + str(args)
+    else:
+        global last_order_server
+        last_order_server = 'A' if last_order_server == 'B' else 'A'
+        query_url = order_urls[last_order_server] + '/buy/' + str(args)
+    last_order_server = 'A' if last_order_server == 'B' else 'A'
+    shared_flag_lock.release()
 
-    # note the request end time and calculate the difference
-    request_end = datetime.datetime.now()
-    request_time = request_end - request_start
+    # get the result
+    try:
+        query_result = requests.get(url=query_url, data={'request_id': request_id})
+        if query_result.json()['result'] == 'Server Error':
+            # TODO add to shared buffer - catalog server down
+            pass
+        else:
+            # note the request end time and calculate the difference
+            request_end = datetime.datetime.now()
+            request_time = request_end - request_start
 
-    # acquire a lock on the file and write the time
-    log_lock.acquire()
-    file = open("front_end_server.txt", "a+")
-    file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-    file.close()
-    log_lock.release()
+            # acquire a lock on the file and write the time
+            log_lock.acquire()
+            file = open("front_end_server.txt", "a+")
+            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            file.close()
+            log_lock.release()
 
-    # return the results
-    return query_result.json()
+            # return the results
+            return query_result.json()
+    except Exception:
+        # TODO add to shared buffer - order server down
+        pass
 
 
 '''

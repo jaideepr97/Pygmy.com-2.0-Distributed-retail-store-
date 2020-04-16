@@ -1,5 +1,4 @@
 import sys
-
 from flask import Flask
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +8,8 @@ import random
 import string
 import threading
 from marshmallow import Schema, fields
+import json
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
@@ -18,12 +19,14 @@ db = SQLAlchemy(app)  # defining the sqlite db
 # defining various urls
 # catalog_A_url = 'http://elnux1.cs.umass.edu:34602'
 # catalog_B_url = 'http://elnux1.cs.umass.edu:34612'
-catalog_A_url = 'http://0.0.0.0:34602'
-catalog_B_url = 'http://0.0.0.0:34612'
-url = catalog_A_url
+catalog_url = 'http://0.0.0.0'
 # url = catalog_B_url
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
+
+primary_details = None
+with open('primary_details.json') as f:
+  primary_details = json.load(f)
 
 
 '''
@@ -80,60 +83,65 @@ def buy(args):
     request_start = datetime.now()
     request_id = request.values['request_id']
 
-    # form the query url and get the result
-    query_url = url + '/query_by_item/' + str(args)
-    query_result = requests.get(url=query_url, data={'request_id': request_id})
-    query_data = query_result.json()
-
-    # if the item is in stock
-    if query_data is not None and query_data['result']['quantity'] > 0:
-
+    if primary_details is not None:
         # form the query url and get the result
-        update_url = url + '/update/' + str(args)
-        update_result = requests.get(url=update_url, data={'request_id': request_id})
-        update_data = update_result.json()
+        port = str(primary_details[str(args)])
+        query_url = catalog_url + ':' + port + '/query_by_item/' + str(args)
+        try:
+            query_result = requests.get(url=query_url, data={'request_id': request_id})
+            query_data = query_result.json()
 
-        # if the item is in stock
-        if update_data['result'] == 0:
+            # if the item is in stock
+            if query_data is not None and query_data['result']['quantity'] > 0:
 
-            # create a unique order id
-            _id = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+                # form the query url and get the result
+                update_url = catalog_url + ':' + port + '/update/' + str(args)
+                update_result = requests.get(url=update_url, data={'request_id': request_id})
+                update_data = update_result.json()
 
-            # create an order db object and add to orders db
-            purchase_request = PurchaseRequest(id=_id, book_name=query_data['result']['name'], item_number=args,
-                                               total_price=query_data['result']['cost'],
-                                               remaining_stock=update_data['remaining_stock'])
-            db.session.add(purchase_request)
-            db.session.commit()
+                # if the item is in stock
+                if update_data['result'] == 0:
 
-            # get the newly created order details
-            order_details = PurchaseRequest.query.filter_by(id=_id).first()
-            order_schema = PurchaseRequestSchema()
-            result = order_schema.dump(order_details)
+                    # create a unique order id
+                    _id = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
 
-            # note the request end time and calculate the difference
-            request_end = datetime.now()
-            request_time = request_end - request_start
+                    # create an order db object and add to orders db
+                    purchase_request = PurchaseRequest(id=_id, book_name=query_data['result']['name'], item_number=args,
+                                                       total_price=query_data['result']['cost'],
+                                                       remaining_stock=update_data['remaining_stock'])
+                    db.session.add(purchase_request)
+                    db.session.commit()
 
-            # acquire a lock on the file and write the time
-            log_lock.acquire()
-            file = open("order_server.txt", "a+")
-            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-            file.close()
-            log_lock.release()
+                    # get the newly created order details
+                    order_details = PurchaseRequest.query.filter_by(id=_id).first()
+                    order_schema = PurchaseRequestSchema()
+                    result = order_schema.dump(order_details)
 
-            # return the result
-            return {'Buy Successful': result}
+                    # note the request end time and calculate the difference
+                    request_end = datetime.now()
+                    request_time = request_end - request_start
 
-        # if the item is not in stock
-        else:
-            # return failure
-            return {'Buy Failed!': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+                    # acquire a lock on the file and write the time
+                    log_lock.acquire()
+                    file = open("order_server.txt", "a+")
+                    file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+                    file.close()
+                    log_lock.release()
 
-    # if the item is not in stock
-    else:
-        # return failure
-        return {'Buy Failed!': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+                    # return the result
+                    return {'result': 'Buy Successful', 'data': result}
+
+                # if the item is not in stock
+                else:
+                    # return failure
+                    return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+
+            # if the item is not in stock
+            else:
+                # return failure
+                return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+        except Exception:
+            return {'result': 'Server Error'}
 
 
 '''
