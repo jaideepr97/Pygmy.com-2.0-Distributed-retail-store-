@@ -11,13 +11,24 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 '''
 Defining various urls
 '''
-# catalog_url = 'http://elnux1.cs.umass.edu:34602'
-# order_url = 'http://elnux2.cs.umass.edu:34601'
-catalog_url = 'http://0.0.0.0:34602'
-order_url = 'http://0.0.0.0:34601'
+# catalog_A_url = 'http://elnux1.cs.umass.edu:34602'
+# catalog_B_url = 'http://elnux1.cs.umass.edu:34612'
+# order_A_url = 'http://elnux2.cs.umass.edu:34601'
+# order_B_url = 'http://elnux2.cs.umass.edu:34611'
+catalog_A_url = 'http://0.0.0.0:34602'
+catalog_B_url = 'http://0.0.0.0:34612'
+order_A_url = 'http://0.0.0.0:34601'
+order_B_url = 'http://0.0.0.0:34611'
+
+catalog_url = catalog_A_url
+# catalog_url = catalog_B_url
+# order_url = order_A_url
+order_url = order_B_url
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
+sharedDS_lock = threading.Lock()  # lock for shared data structure for heartbeat messages
 
+replicas_alive = {'A': True, 'B': True}
 
 '''
 This function is used to shut down the server

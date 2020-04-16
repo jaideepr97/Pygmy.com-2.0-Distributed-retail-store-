@@ -1,3 +1,5 @@
+import sys
+import time
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields
@@ -6,7 +8,7 @@ import datetime
 from flask import request
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
 db = SQLAlchemy(app)    # defining the sqlite database
 buy_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
@@ -50,6 +52,12 @@ def shutdown_server():
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
+
+
+def heartbeat():
+    while True:
+        time.sleep(3)
+
 
 
 '''
@@ -198,4 +206,4 @@ def shutdown():
 Starting point of the application
 '''
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=34602, debug=True)
+    app.run(host='0.0.0.0', port=sys.argv[1], debug=True)

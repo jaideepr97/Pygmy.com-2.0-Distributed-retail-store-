@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
@@ -9,12 +11,16 @@ import threading
 from marshmallow import Schema, fields
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
 db = SQLAlchemy(app)  # defining the sqlite db
 
 # defining various urls
-# url = 'http://elnux1.cs.umass.edu:34602'
-url = 'http://0.0.0.0:34602'
+# catalog_A_url = 'http://elnux1.cs.umass.edu:34602'
+# catalog_B_url = 'http://elnux1.cs.umass.edu:34612'
+catalog_A_url = 'http://0.0.0.0:34602'
+catalog_B_url = 'http://0.0.0.0:34612'
+url = catalog_A_url
+# url = catalog_B_url
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
@@ -143,4 +149,4 @@ def shutdown():
 Starting point of the application
 '''
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=34601, debug=True)
+    app.run(host='0.0.0.0', port=sys.argv[1], debug=True)

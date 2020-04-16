@@ -1,4 +1,4 @@
 source venv/bin/activate;
 pip install -r requirements.txt;
-python3 front-end/front-end.py
+python3 order/order.py 34611 'sqlite:///orders_B.db'
 
