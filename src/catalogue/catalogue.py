@@ -9,6 +9,7 @@ from flask import request
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog_B.db'
 db = SQLAlchemy(app)    # defining the sqlite database
 buy_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics

@@ -12,6 +12,7 @@ from marshmallow import Schema, fields
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders_B.db'
 db = SQLAlchemy(app)  # defining the sqlite db
 
 # defining various urls
