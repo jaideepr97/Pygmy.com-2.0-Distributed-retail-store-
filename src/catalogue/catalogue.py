@@ -1,5 +1,6 @@
 import sys
 import time
+import requests
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields
@@ -9,12 +10,16 @@ from flask import request
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog_B.db'
+
 db = SQLAlchemy(app)    # defining the sqlite database
 write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
+
 replica_host = 'http://0.0.0.0'
+# replica_host = 'http://elnux1.cs.umass.edu'
+
 replica_port = str(sys.argv[3])
+log_file = str(sys.argv[4])
 
 '''
 This class defines the model for out catalog database, which stores the details
@@ -67,6 +72,16 @@ This function is used to query by topic
 '''
 
 
+@app.route('/heartbeat', methods=['GET'])
+def heartbeat():
+    return '', 200
+
+
+@app.route('/resync_db', methods=['GET'])
+def resync_db():
+    pass
+
+
 @app.route('/query_by_subject/<args>', methods=["GET"])
 def query_by_subject(args):
 
@@ -87,7 +102,7 @@ def query_by_subject(args):
 
     # acquire a lock on the file and write the time taken
     log_lock.acquire()
-    file = open("catalog_server.txt", "a+")
+    file = open(log_file, "a+")
     file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
     file.close()
     log_lock.release()
@@ -121,7 +136,7 @@ def query_by_item(args):
 
     # acquire a lock on the file and write the time taken
     log_lock.acquire()
-    file = open("catalog_server.txt", "a+")
+    file = open(log_file, "a+")
     file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
     file.close()
     log_lock.release()
@@ -173,7 +188,7 @@ def update(args):
 
             # acquire a lock on the file and write the time taken
             log_lock.acquire()
-            file = open("front_end_server.txt", "a+")
+            file = open(log_file, "a+")
             file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
             file.close()
             log_lock.release()
@@ -194,7 +209,7 @@ def update(args):
 
         # acquire a lock on the file and write the time taken
         log_lock.acquire()
-        file = open("front_end_server.txt", "a+")
+        file = open(log_file, "a+")
         file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
         file.close()
         log_lock.release()
@@ -228,8 +243,18 @@ def shutdown():
     return 'Catalog Server shutting down...'
 
 
+# @app.route('/restore_catalog_db', methods=['GET'])
+# def restore_catalog_db():
+#     # shutdown_server()
+#     # return 'Catalog Server shutting down...'
+
+
+
+
+
 '''
 Starting point of the application
 '''
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=sys.argv[1], debug=True)

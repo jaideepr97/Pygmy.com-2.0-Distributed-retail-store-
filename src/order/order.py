@@ -13,19 +13,19 @@ import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders_B.db'
-db = SQLAlchemy(app)  # defining the sqlite db
 
+db = SQLAlchemy(app)  # defining the sqlite db
+log_file = str(sys.argv[3])
 # defining various urls
-# catalog_A_url = 'http://elnux1.cs.umass.edu:34602'
-# catalog_B_url = 'http://elnux1.cs.umass.edu:34612'
+
+# catalog_url = 'http://elnux1.cs.umass.edu'
 catalog_url = 'http://0.0.0.0'
-# url = catalog_B_url
+
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
 primary_details = None
-with open('primary_details.json') as f:
+with open('order/primary_details.json') as f:
   primary_details = json.load(f)
 
 
@@ -70,6 +70,10 @@ def shutdown_server():
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
 
+
+@app.route('/heartbeat', methods=['GET'])
+def heartbeat():
+    return '', 200
 
 '''
 This function facilitates a buy request
@@ -123,7 +127,7 @@ def buy(args):
 
                     # acquire a lock on the file and write the time
                     log_lock.acquire()
-                    file = open("order_server.txt", "a+")
+                    file = open(log_file, "a+")
                     file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
                     file.close()
                     log_lock.release()
@@ -142,6 +146,7 @@ def buy(args):
                 return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
         except Exception:
             return {'result': 'Server Error'}
+
 
 
 '''
