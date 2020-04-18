@@ -13,11 +13,11 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 '''
 Defining various urls
 '''
-# catalog_urls = {'A': 'http://elnux1.cs.umass.edu:34602', 'B': 'http://elnux1.cs.umass.edu:34612'}
-# order_urls = {'A': 'http://elnux2.cs.umass.edu:34601', 'B': 'http://elnux2.cs.umass.edu:34611'}
+catalog_urls = {'A': 'http://elnux1.cs.umass.edu:34602', 'B': 'http://elnux1.cs.umass.edu:34612'}
+order_urls = {'A': 'http://elnux2.cs.umass.edu:34601', 'B': 'http://elnux2.cs.umass.edu:34611'}
 
-catalog_urls = {'A': 'http://0.0.0.0:34602', 'B': 'http://0.0.0.0:34612'}
-order_urls = {'A': 'http://0.0.0.0:34601', 'B': 'http://0.0.0.0:34611'}
+# catalog_urls = {'A': 'http://0.0.0.0:34602', 'B': 'http://0.0.0.0:34612'}
+# order_urls = {'A': 'http://0.0.0.0:34601', 'B': 'http://0.0.0.0:34611'}
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 shared_flag_lock = threading.Lock()  # lock for shared data structure for heartbeat messages (replicas_alive)

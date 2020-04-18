@@ -14,15 +14,15 @@ if __name__ == '__main__':
     total_request_time = 0
     request_counter = 0
 
-    for i in range(0, 20):
+    for i in range(0, 100):
         request_id = uuid.uuid1()
         request_start = datetime.datetime.now()
 
         operation = random.choice(operations)
         if operation == 'search':
             topic = random.choice(topics)
-            # query_url = edLab_url + '/' + str(operation) + '/' + str(topic)
-            query_url = local_url + '/' + str(operation) + '/' + str(topic)
+            query_url = edLab_url + '/' + str(operation) + '/' + str(topic)
+            # query_url = local_url + '/' + str(operation) + '/' + str(topic)
             request_result = requests.get(url=query_url, data={'request_id': request_id})
             file = open("client_1_output.txt", "a+")
             file.write(request_result.text)
@@ -37,8 +37,8 @@ if __name__ == '__main__':
 
         elif operation == 'lookup' or 'buy':
             item = random.choice(items)
-            # query_url = edLab_url + '/' + str(operation) + '/' + str(item)
-            query_url = local_url + '/' + str(operation) + '/' + str(item)
+            query_url = edLab_url + '/' + str(operation) + '/' + str(item)
+            # query_url = local_url + '/' + str(operation) + '/' + str(item)
             request_result = requests.get(url=query_url, data={'request_id': request_id})
             file = open("client_1_output.txt", "a+")
             file.write(request_result.text)

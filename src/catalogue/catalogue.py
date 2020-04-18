@@ -15,8 +15,8 @@ db = SQLAlchemy(app)    # defining the sqlite database
 write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
-replica_host = 'http://0.0.0.0'
-# replica_host = 'http://elnux1.cs.umass.edu'
+# replica_host = 'http://0.0.0.0'
+replica_host = 'http://elnux1.cs.umass.edu'
 
 replica_port = str(sys.argv[3])
 log_file = str(sys.argv[4])

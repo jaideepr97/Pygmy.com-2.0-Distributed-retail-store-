@@ -18,8 +18,8 @@ db = SQLAlchemy(app)  # defining the sqlite db
 log_file = str(sys.argv[3])
 # defining various urls
 
-# catalog_url = 'http://elnux1.cs.umass.edu'
-catalog_url = 'http://0.0.0.0'
+catalog_url = 'http://elnux1.cs.umass.edu'
+# catalog_url = 'http://0.0.0.0'
 
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
