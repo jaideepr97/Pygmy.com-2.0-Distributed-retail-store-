@@ -26,8 +26,10 @@ shared_buffer_lock = threading.Lock() # lock for shared data structure for heart
 catalog_replicas_alive = {'A': True, 'B': True}
 order_replicas_alive = {'A': True, 'B': True}
 
-catalog_respawn_script_commands = {'A': './run_catalogue_A.sh', 'B': './run_catalogue_B.sh'}
-order_respawn_script_commands = {'A': './run_order_A.sh', 'B': './run_order_B.sh'}
+catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh; ./respawn_catalogue_A.sh',
+                                   'B': 'chmod +x respawn_catalogue_B.sh; ./respawn_catalogue_B.sh'}
+order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh;./respawn_order_A.sh',
+                                 'B': 'chmod +x respawn_order_B.sh; ./respawn_order_B.sh'}
 
 last_order_server = 'A'
 last_catalog_server = 'A'
@@ -267,8 +269,8 @@ if __name__ == '__main__':
     order_A_heartbeat.start()
     order_B_heartbeat = threading.Thread(target=heartbeat, args=(order_urls['B'],))
     order_B_heartbeat.start()
-    # respawn_server_thread = threading.Thread(target=respawn_servers)
-    # respawn_server_thread.start()
+    respawn_server_thread = threading.Thread(target=respawn_servers)
+    respawn_server_thread.start()
     app.run(host='0.0.0.0', port=34600, debug=False)
 
 
