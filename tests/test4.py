@@ -14,7 +14,7 @@ if __name__ == '__main__':
     total_request_time = 0
     request_counter = 0
 
-    for i in range(0, 100):
+    for i in range(0, 200):
         request_id = uuid.uuid1()
         request_start = datetime.datetime.now()
 

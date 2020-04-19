@@ -9,7 +9,7 @@ import string
 import threading
 from marshmallow import Schema, fields
 import json
-
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
@@ -91,61 +91,67 @@ def buy(args):
         # form the query url and get the result
         port = str(primary_details[str(args)])
         query_url = catalog_url + ':' + port + '/query_by_item/' + str(args)
-        try:
-            query_result = requests.get(url=query_url, data={'request_id': request_id})
-            query_data = query_result.json()
 
-            # if the item is in stock
-            if query_data is not None and query_data['result']['quantity'] > 0:
-
-                # form the query url and get the result
-                update_url = catalog_url + ':' + port + '/update/' + str(args)
-                update_result = requests.get(url=update_url, data={'request_id': request_id})
-                update_data = update_result.json()
+        request_success = False
+        while not request_success:
+            try:
+                query_result = requests.get(url=query_url, data={'request_id': request_id})
+                query_data = query_result.json()
 
                 # if the item is in stock
-                if update_data['result'] == 0:
+                if query_data is not None and query_data['result']['quantity'] > 0:
 
-                    # create a unique order id
-                    _id = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+                    # form the query url and get the result
+                    update_url = catalog_url + ':' + port + '/update/' + str(args)
+                    update_result = requests.get(url=update_url, data={'request_id': request_id})
+                    update_data = update_result.json()
 
-                    # create an order db object and add to orders db
-                    purchase_request = PurchaseRequest(id=_id, book_name=query_data['result']['name'], item_number=args,
-                                                       total_price=query_data['result']['cost'],
-                                                       remaining_stock=update_data['remaining_stock'])
-                    db.session.add(purchase_request)
-                    db.session.commit()
+                    # if the item is in stock
+                    if update_data['result'] == 0:
+                        request_success = True
+                        # create a unique order id
+                        _id = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
 
-                    # get the newly created order details
-                    order_details = PurchaseRequest.query.filter_by(id=_id).first()
-                    order_schema = PurchaseRequestSchema()
-                    result = order_schema.dump(order_details)
+                        # create an order db object and add to orders db
+                        purchase_request = PurchaseRequest(id=_id, book_name=query_data['result']['name'], item_number=args,
+                                                           total_price=query_data['result']['cost'],
+                                                           remaining_stock=update_data['remaining_stock'])
+                        db.session.add(purchase_request)
+                        db.session.commit()
 
-                    # note the request end time and calculate the difference
-                    request_end = datetime.now()
-                    request_time = request_end - request_start
+                        # get the newly created order details
+                        order_details = PurchaseRequest.query.filter_by(id=_id).first()
+                        order_schema = PurchaseRequestSchema()
+                        result = order_schema.dump(order_details)
 
-                    # acquire a lock on the file and write the time
-                    log_lock.acquire()
-                    file = open(log_file, "a+")
-                    file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-                    file.close()
-                    log_lock.release()
+                        # note the request end time and calculate the difference
+                        request_end = datetime.now()
+                        request_time = request_end - request_start
 
-                    # return the result
-                    return {'result': 'Buy Successful', 'data': result}
+                        # acquire a lock on the file and write the time
+                        log_lock.acquire()
+                        file = open(log_file, "a+")
+                        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+                        file.close()
+                        log_lock.release()
 
+                        # return the result
+
+                        return {'result': 'Buy Successful', 'data': result}
+
+                    # if the item is not in stock
+                    else:
+                        # return failure
+                        return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
                 # if the item is not in stock
                 else:
                     # return failure
+
                     return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
 
-            # if the item is not in stock
-            else:
-                # return failure
-                return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
-        except Exception:
-            return {'result': 'Server Error'}
+            except Exception:
+                time.sleep(3)
+                # return {'result': 'Server Error'}
 
 
 

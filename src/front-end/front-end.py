@@ -13,6 +13,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 '''
 Defining various urls
 '''
+
 catalog_urls = {'A': 'http://elnux1.cs.umass.edu:34602', 'B': 'http://elnux1.cs.umass.edu:34612'}
 order_urls = {'A': 'http://elnux2.cs.umass.edu:34601', 'B': 'http://elnux2.cs.umass.edu:34611'}
 
@@ -26,10 +27,10 @@ shared_buffer_lock = threading.Lock() # lock for shared data structure for heart
 catalog_replicas_alive = {'A': True, 'B': True}
 order_replicas_alive = {'A': True, 'B': True}
 
-catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh; ./respawn_catalogue_A.sh',
-                                   'B': 'chmod +x respawn_catalogue_B.sh; ./respawn_catalogue_B.sh'}
-order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh;./respawn_order_A.sh',
-                                 'B': 'chmod +x respawn_order_B.sh; ./respawn_order_B.sh'}
+catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh; ./respawn_catalogue_A.sh &',
+                                   'B': 'chmod +x respawn_catalogue_B.sh; ./respawn_catalogue_B.sh &'}
+order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh; ./respawn_order_A.sh &',
+                                 'B': 'chmod +x respawn_order_B.sh; ./respawn_order_B.sh &'}
 
 last_order_server = 'A'
 last_catalog_server = 'A'
@@ -52,9 +53,17 @@ def respawn_servers():
         for replica in catalog_replicas_alive:
             if not catalog_replicas_alive[replica]:
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
+                print("====------catalog {} re-spawned-----=====".format(replica))
+                time.sleep(3)
+                resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
+                while resync_response.status_code != 200:
+                    time.sleep(3)
+                    resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
+                print("********** Re-synchronization of catalog DB for replica {} complete *************".format(replica))
         for replica in order_replicas_alive:
             if not order_replicas_alive[replica]:
                 subprocess.call([str(order_respawn_script_commands[replica])], shell=True)
+                print("=====---order {} re-spawned----=====".format(replica))
 
 
 def heartbeat(destination_server_url):
@@ -64,39 +73,46 @@ def heartbeat(destination_server_url):
             heartbeat_response_url = str(destination_server_url) + '/heartbeat'
             heartbeat_response = requests.get(url=heartbeat_response_url)
             if heartbeat_response.status_code == 200:
-                print("alive")
+
                 if destination_server_url == catalog_urls['A']:
+                    print(" catalog_A: alive")
                     shared_flag_lock.acquire()
                     catalog_replicas_alive['A'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == catalog_urls['B']:
+                    print(" catalog_B: alive")
                     shared_flag_lock.acquire()
                     catalog_replicas_alive['B'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == order_urls['A']:
+                    print(" order_A: alive")
                     shared_flag_lock.acquire()
                     order_replicas_alive['A'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == order_urls['B']:
+                    print(" order_B: alive")
                     shared_flag_lock.acquire()
                     order_replicas_alive['B'] = True
                     shared_flag_lock.release()
 
         except Exception:
-            print("---------DEAD-------------")
             if destination_server_url == catalog_urls['A']:
+                print("--------- catalog_A: DEAD-------------")
                 shared_flag_lock.acquire()
                 catalog_replicas_alive['A'] = False
                 shared_flag_lock.release()
             elif destination_server_url == catalog_urls['B']:
+                print("--------- catalog_B: DEAD-------------")
                 shared_flag_lock.acquire()
                 catalog_replicas_alive['B'] = False
                 shared_flag_lock.release()
             elif destination_server_url == order_urls['A']:
+                print("--------- order_A: DEAD-------------")
                 shared_flag_lock.acquire()
                 order_replicas_alive['A'] = False
                 shared_flag_lock.release()
             elif destination_server_url == order_urls['B']:
+                print("--------- order_B: DEAD-------------")
                 shared_flag_lock.acquire()
                 order_replicas_alive['B'] = False
                 shared_flag_lock.release()
@@ -115,38 +131,41 @@ def search(args):
     # note the starting time of the request
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
+    request_success = False
 
-    # form the query url using load balancing (round robin)
-    shared_flag_lock.acquire()
-    if catalog_replicas_alive[last_catalog_server]:
-        query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
-    else:
-        # global last_catalog_server
+    while not request_success:
+        # form the query url using load balancing (round robin)
+        shared_flag_lock.acquire()
+        if catalog_replicas_alive[last_catalog_server]:
+            query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
+        else:
+            # global last_catalog_server
+            last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
+            query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
         last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
-        query_url = catalog_urls[last_catalog_server] + '/query_by_subject/' + str(args)
-    last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
-    shared_flag_lock.release()
+        shared_flag_lock.release()
 
-    # get the results
-    try:
-        query_result = requests.get(url=query_url, data={'request_id': request_id})
+        # get the results
+        try:
+            query_result = requests.get(url=query_url, data={'request_id': request_id})
 
-        # note the request end time and calculate the difference
-        request_end = datetime.datetime.now()
-        request_time = request_end - request_start
+            # note the request end time and calculate the difference
+            request_end = datetime.datetime.now()
+            request_time = request_end - request_start
 
-        # acquire a lock on the file and write the time
-        log_lock.acquire()
-        file = open("front-end/front_end_server_log.txt", "a+")
-        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-        file.close()
-        log_lock.release()
+            # acquire a lock on the file and write the time
+            log_lock.acquire()
+            file = open("front-end/front_end_server_log.txt", "a+")
+            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            file.close()
+            log_lock.release()
 
-        # return the results
-        return query_result.json()
-    except Exception:
-        # TODO add to shared buffer - request failure (catalogue server down)
-        pass
+            # return the results
+            request_success = True
+            return query_result.json()
+        except Exception:
+            time.sleep(3)
+            pass
 
 
 '''
@@ -161,38 +180,41 @@ def lookup(args):
     # note the starting time of the request
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
+    request_success = False
 
-    # form the query url using load balancing (round robin)
-    shared_flag_lock.acquire()
-    if catalog_replicas_alive[last_catalog_server]:
-        query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
-    else:
-        # global last_catalog_server
+    while not request_success:
+        # form the query url using load balancing (round robin)
+        shared_flag_lock.acquire()
+        if catalog_replicas_alive[last_catalog_server]:
+            query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
+        else:
+            # global last_catalog_server
+            last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
+            query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
         last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
-        query_url = catalog_urls[last_catalog_server] + '/query_by_item/' + str(args)
-    last_catalog_server = 'A' if last_catalog_server == 'B' else 'B'
-    shared_flag_lock.release()
+        shared_flag_lock.release()
 
-    # get the result
-    try:
-        query_result = requests.get(url=query_url, data={'request_id': request_id})
+        # get the result
+        try:
+            query_result = requests.get(url=query_url, data={'request_id': request_id})
 
-        # note the request end time and calculate the difference
-        request_end = datetime.datetime.now()
-        request_time = request_end - request_start
+            # note the request end time and calculate the difference
+            request_end = datetime.datetime.now()
+            request_time = request_end - request_start
 
-        # acquire a lock on the file and write the time
-        log_lock.acquire()
-        file = open("front-end/front_end_server_log.txt", "a+")
-        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-        file.close()
-        log_lock.release()
+            # acquire a lock on the file and write the time
+            log_lock.acquire()
+            file = open("front-end/front_end_server_log.txt", "a+")
+            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            file.close()
+            log_lock.release()
 
-        # return the results
-        return query_result.json()
-    except Exception:
-        # TODO add to shared buffer - request failure (catalogue server down)
-        pass
+            # return the results
+            request_success = True
+            return query_result.json()
+        except Exception:
+            time.sleep(3)
+            pass
 
 
 '''
@@ -206,44 +228,46 @@ def buy(args):
     # note the starting time of the request
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
+    request_success = False
 
     # invalidate cache
     cache.delete_memoized(lookup, args)
 
-    # form the query url using load balancing (round robin)
-    shared_flag_lock.acquire()
-    if order_replicas_alive[last_order_server]:
-        query_url = order_urls[last_order_server] + '/buy/' + str(args)
-    else:
-        # global last_order_server
-        last_order_server = 'A' if last_order_server == 'B' else 'B'
-        query_url = order_urls[last_order_server] + '/buy/' + str(args)
-    last_order_server = 'A' if last_order_server == 'B' else 'B'
-    shared_flag_lock.release()
-
-    # get the result
-    try:
-        query_result = requests.get(url=query_url, data={'request_id': request_id})
-        if query_result.json()['result'] == 'Server Error':
-            # TODO add to shared buffer - catalog server down
-            pass
+    while not request_success:
+        # form the query url using load balancing (round robin)
+        shared_flag_lock.acquire()
+        if order_replicas_alive[last_order_server]:
+            query_url = order_urls[last_order_server] + '/buy/' + str(args)
         else:
-            # note the request end time and calculate the difference
-            request_end = datetime.datetime.now()
-            request_time = request_end - request_start
+            # global last_order_server
+            last_order_server = 'A' if last_order_server == 'B' else 'B'
+            query_url = order_urls[last_order_server] + '/buy/' + str(args)
+        last_order_server = 'A' if last_order_server == 'B' else 'B'
+        shared_flag_lock.release()
 
-            # acquire a lock on the file and write the time
-            log_lock.acquire()
-            file = open("front-end/front_end_server_log.txt", "a+")
-            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-            file.close()
-            log_lock.release()
+        # get the result
+        try:
+            query_result = requests.get(url=query_url, data={'request_id': request_id})
+            if query_result.json()['result'] == 'Server Error':
+                pass
+            else:
+                # note the request end time and calculate the difference
+                request_end = datetime.datetime.now()
+                request_time = request_end - request_start
 
-            # return the results
-            return query_result.json()
-    except Exception:
-        # TODO add to shared buffer - order server down
-        pass
+                # acquire a lock on the file and write the time
+                log_lock.acquire()
+                file = open("front-end/front_end_server_log.txt", "a+")
+                file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+                file.close()
+                log_lock.release()
+
+                # return the results
+                request_success = True
+                return query_result.json()
+        except Exception:
+            time.sleep(3)
+            pass
 
 
 '''

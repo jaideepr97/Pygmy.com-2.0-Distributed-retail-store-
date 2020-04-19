@@ -7,6 +7,8 @@ from marshmallow import Schema, fields
 import threading
 import datetime
 from flask import request
+from flask import jsonify
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
@@ -62,24 +64,9 @@ def shutdown_server():
     func()
 
 
-def heartbeat():
-    while True:
-        time.sleep(3)
-
-
 '''
 This function is used to query by topic
 '''
-
-
-@app.route('/heartbeat', methods=['GET'])
-def heartbeat():
-    return '', 200
-
-
-@app.route('/resync_db', methods=['GET'])
-def resync_db():
-    pass
 
 
 @app.route('/query_by_subject/<args>', methods=["GET"])
@@ -155,8 +142,8 @@ corresponding to the item number
 def update(args):
 
     # note the request start time
-    request_start = datetime.datetime.now()
-    request_id = request.values['request_id']
+    # request_start = datetime.datetime.now()
+    # request_id = request.values['request_id']
 
     # acquire a lock on the catalog db to update the item
     write_lock.acquire()
@@ -183,15 +170,15 @@ def update(args):
             write_lock.release()
 
             # note request end time and calculate difference
-            request_end = datetime.datetime.now()
-            request_time = request_end - request_start
+            # request_end = datetime.datetime.now()
+            # request_time = request_end - request_start
 
             # acquire a lock on the file and write the time taken
-            log_lock.acquire()
-            file = open(log_file, "a+")
-            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-            file.close()
-            log_lock.release()
+            # log_lock.acquire()
+            # file = open(log_file, "a+")
+            # file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            # file.close()
+            # log_lock.release()
 
             # return success with remaining stock
             return {'result': 0, 'remaining_stock': catalog.quantity}
@@ -243,14 +230,33 @@ def shutdown():
     return 'Catalog Server shutting down...'
 
 
-# @app.route('/restore_catalog_db', methods=['GET'])
-# def restore_catalog_db():
-#     # shutdown_server()
-#     # return 'Catalog Server shutting down...'
+@app.route('/heartbeat', methods=['GET'])
+def heartbeat():
+    return '', 200
 
 
+@app.route('/resync_catalog_db', methods=['GET'])
+def resync_catalog_db():
+    updated_db = requests.get(url=replica_host + ':' + replica_port + '/request_restore_catalog_db')
+    updated_db_data = updated_db.json()['quantities']
+    write_lock.acquire()
+    catalog = db.session.query(Catalog).all()
+    for c in catalog:
+        c.quantity = updated_db_data[str(c.id)]
+    db.session.commit()
+    write_lock.release()
+    return '', 200
 
 
+@app.route('/request_restore_catalog_db', methods=['GET'])
+def request_restore_catalog_db():
+    restore_quantities = {}
+    write_lock.acquire()
+    catalog = db.session.query(Catalog).all()
+    for c in catalog:
+        restore_quantities[c.id] = c.quantity
+    write_lock.release()
+    return jsonify({'quantities': restore_quantities})
 
 '''
 Starting point of the application
