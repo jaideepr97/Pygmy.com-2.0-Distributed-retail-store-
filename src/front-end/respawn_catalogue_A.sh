@@ -1,0 +1,1 @@
+docker run -p 34602:34602 -d catalog-a &

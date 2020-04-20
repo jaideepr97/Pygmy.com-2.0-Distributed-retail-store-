@@ -17,8 +17,10 @@ db = SQLAlchemy(app)    # defining the sqlite database
 write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
-# replica_host = 'http://0.0.0.0'
-replica_host = 'http://elnux1.cs.umass.edu'
+replica_host = None
+with open('config.json') as f:
+    host_details = json.load(f)
+    replica_host = 'http://0.0.0.0' if host_details['location'] == 0 else 'http://elnux1.cs.umass.edu'
 
 replica_port = str(sys.argv[3])
 log_file = str(sys.argv[4])
@@ -160,7 +162,8 @@ def update(args):
 
         # update the replica
         try:
-            replica_update_request = requests.get(url=replica_host + ':' + replica_port + '/update_replica/' + str(args))
+            replica_url = replica_host + ':' + replica_port + '/update_replica/' + str(args)
+            replica_update_request = requests.get(url=replica_url, data={'quantity': catalog.quantity})
         except Exception:
             print('Exception occurred while writing to replica')
         else:
@@ -210,7 +213,7 @@ def update_replica(args):
 
     try:
         catalog = db.session.query(Catalog).filter_by(id=args).with_for_update().first()
-        catalog.quantity -= 1
+        catalog.quantity = request.values['quantity']
         db.session.commit()
         print('Replica updated for id: %d' % args)
     except Exception:

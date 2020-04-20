@@ -6,6 +6,8 @@ import threading
 from flask_caching import Cache
 import time
 import subprocess
+import sys
+import json
 
 app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
@@ -13,19 +15,31 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 '''
 Defining various urls
 '''
+isLocal = False
+catalog_urls = {}
+order_urls = {}
 
-catalog_urls = {'A': 'http://elnux1.cs.umass.edu:34602', 'B': 'http://elnux1.cs.umass.edu:34612'}
-order_urls = {'A': 'http://elnux2.cs.umass.edu:34601', 'B': 'http://elnux2.cs.umass.edu:34611'}
+with open('config.json') as f:
+    host_details = json.load(f)
+    isLocal = True if host_details['location'] == 0 else False
 
-# catalog_urls = {'A': 'http://0.0.0.0:34602', 'B': 'http://0.0.0.0:34612'}
-# order_urls = {'A': 'http://0.0.0.0:34601', 'B': 'http://0.0.0.0:34611'}
+if isLocal:
+    catalog_urls = {'A': 'http://0.0.0.0:34602', 'B': 'http://0.0.0.0:34612'}
+    order_urls = {'A': 'http://0.0.0.0:34601', 'B': 'http://0.0.0.0:34611'}
+else:
+    catalog_urls = {'A': 'http://elnux1.cs.umass.edu:34602', 'B': 'http://elnux1.cs.umass.edu:34612'}
+    order_urls = {'A': 'http://elnux2.cs.umass.edu:34601', 'B': 'http://elnux2.cs.umass.edu:34611'}
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 shared_flag_lock = threading.Lock()  # lock for shared data structure for heartbeat messages (replicas_alive)
-shared_buffer_lock = threading.Lock() # lock for shared data structure for heartbeat messages (buffer)
+shared_buffer_lock = threading.Lock()  # lock for shared data structure for heartbeat messages (buffer)
 
 catalog_replicas_alive = {'A': True, 'B': True}
 order_replicas_alive = {'A': True, 'B': True}
+
+catalog_respawn_script_commands = {}
+order_respawn_script_commands = {}
+
 
 catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh; ./respawn_catalogue_A.sh &',
                                    'B': 'chmod +x respawn_catalogue_B.sh; ./respawn_catalogue_B.sh &'}
@@ -34,6 +48,8 @@ order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh; ./respawn_or
 
 last_order_server = 'A'
 last_catalog_server = 'A'
+log_file = str(sys.argv[1])
+print('------------------1--------------------')
 
 '''
 This function is used to shut down the server
@@ -59,7 +75,8 @@ def respawn_servers():
                 while resync_response.status_code != 200:
                     time.sleep(3)
                     resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
-                print("********** Re-synchronization of catalog DB for replica {} complete *************".format(replica))
+                print(
+                    "********** Re-synchronization of catalog DB for replica {} complete *************".format(replica))
         for replica in order_replicas_alive:
             if not order_replicas_alive[replica]:
                 subprocess.call([str(order_respawn_script_commands[replica])], shell=True)
@@ -118,7 +135,6 @@ def heartbeat(destination_server_url):
                 shared_flag_lock.release()
 
 
-
 '''
 This function is used to search by topic
 '''
@@ -155,7 +171,7 @@ def search(args):
 
             # acquire a lock on the file and write the time
             log_lock.acquire()
-            file = open("front-end/front_end_server_log.txt", "a+")
+            file = open(log_file, "a+")
             file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
             file.close()
             log_lock.release()
@@ -204,7 +220,7 @@ def lookup(args):
 
             # acquire a lock on the file and write the time
             log_lock.acquire()
-            file = open("front-end/front_end_server_log.txt", "a+")
+            file = open(log_file, "a+")
             file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
             file.close()
             log_lock.release()
@@ -257,7 +273,7 @@ def buy(args):
 
                 # acquire a lock on the file and write the time
                 log_lock.acquire()
-                file = open("front-end/front_end_server_log.txt", "a+")
+                file = open(log_file, "a+")
                 file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
                 file.close()
                 log_lock.release()
@@ -285,6 +301,7 @@ def shutdown():
 Starting point of the application
 '''
 if __name__ == '__main__':
+    '''
     catalog_A_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['A'],))
     catalog_A_heartbeat.start()
     catalog_B_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['B'],))
@@ -295,6 +312,6 @@ if __name__ == '__main__':
     order_B_heartbeat.start()
     respawn_server_thread = threading.Thread(target=respawn_servers)
     respawn_server_thread.start()
-    app.run(host='0.0.0.0', port=34600, debug=False)
-
-
+    '''
+    print('------------------2--------------------')
+    app.run(host='0.0.0.0', port=34600, debug=True)

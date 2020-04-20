@@ -18,14 +18,19 @@ db = SQLAlchemy(app)  # defining the sqlite db
 log_file = str(sys.argv[3])
 # defining various urls
 
-catalog_url = 'http://elnux1.cs.umass.edu'
-# catalog_url = 'http://0.0.0.0'
+catalog_url = None
+isLocal = False
+with open('config.json') as f:
+    host_details = json.load(f)
+    isLocal = True if host_details['location'] == 0 else False
 
+catalog_url = 'http://0.0.0.0' if isLocal else 'http://elnux1.cs.umass.edu'
+primary_path = 'primary_details.json' if isLocal else 'order/order_B/primary_details.json'
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
 primary_details = None
-with open('order/primary_details.json') as f:
+with open(primary_path) as f:
   primary_details = json.load(f)
 
 
