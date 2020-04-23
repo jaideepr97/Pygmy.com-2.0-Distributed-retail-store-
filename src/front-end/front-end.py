@@ -301,7 +301,7 @@ def shutdown():
 Starting point of the application
 '''
 if __name__ == '__main__':
-    '''
+
     catalog_A_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['A'],))
     catalog_A_heartbeat.start()
     catalog_B_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['B'],))
@@ -312,6 +312,5 @@ if __name__ == '__main__':
     order_B_heartbeat.start()
     respawn_server_thread = threading.Thread(target=respawn_servers)
     respawn_server_thread.start()
-    '''
     print('------------------2--------------------')
-    app.run(host='0.0.0.0', port=34600, debug=True)
+    app.run(host='0.0.0.0', port=34600)
