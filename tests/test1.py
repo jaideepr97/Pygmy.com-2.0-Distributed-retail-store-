@@ -2,10 +2,11 @@ import uuid
 import datetime
 import requests
 import random
+import time
 
 if __name__ == '__main__':
 
-    operations = ['search', 'lookup', 'buy']
+    operations = ['search', 'lookup']
     topics = ['distributed%20systems', 'graduate%20school']
     items = [1, 2, 3, 4]
     edLab_url = 'http://elnux3.cs.umass.edu:34600/'
@@ -53,6 +54,7 @@ if __name__ == '__main__':
             file = open("client_1_metrics.txt", "a+")
             file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
             file.close()
+        time.sleep(1)
 
     file = open("client_1_metrics.txt", "a+")
     file.write("Average request processing time: {}\n".format(total_request_time/request_counter))
