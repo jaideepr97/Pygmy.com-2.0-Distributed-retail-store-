@@ -65,15 +65,15 @@ def shutdown_server():
 
 def respawn_servers():
     while True:
-        time.sleep(3)
+        time.sleep(1)
         for replica in catalog_replicas_alive:
             if not catalog_replicas_alive[replica]:
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
                 print("====------catalog {} re-spawned-----=====".format(replica))
-                time.sleep(3)
+                time.sleep(2)
                 resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 while resync_response.status_code != 200:
-                    time.sleep(3)
+                    time.sleep(1)
                     resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 print(
                     "********** Re-synchronization of catalog DB for replica {} complete *************".format(replica))
@@ -86,7 +86,7 @@ def respawn_servers():
 def heartbeat(destination_server_url):
     while True:
         try:
-            time.sleep(3)
+            time.sleep(1)
             heartbeat_response_url = str(destination_server_url) + '/heartbeat'
             heartbeat_response = requests.get(url=heartbeat_response_url)
             if heartbeat_response.status_code == 200:
