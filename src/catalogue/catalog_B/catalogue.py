@@ -22,6 +22,7 @@ with open('config.json') as f:
     host_details = json.load(f)
     replica_host = 'http://0.0.0.0' if host_details['location'] == 0 else 'http://elnux1.cs.umass.edu'
 
+current_port = str(sys.argv[1])
 replica_port = str(sys.argv[3])
 log_file = str(sys.argv[4])
 
@@ -118,6 +119,8 @@ def query_by_item(args):
 
     # dump the result in a JSON
     result = catalog_schema.dump(catalog)
+    replica = 'catalog_a' if current_port == '34602' else 'catalog_b'
+    result['replica'] = replica
 
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
