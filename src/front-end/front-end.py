@@ -75,7 +75,7 @@ def respawn_servers():
             if not catalog_replicas_alive[replica]:
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
                 print("====------catalog {} re-spawned-----=====".format(replica))
-                time.sleep(2)
+                time.sleep(5)
                 print("\nSending request to resync for catalog {}\n".format(replica))
                 print("\nUrl: "+catalog_urls[replica]+"/resync_catalog_db\n")
                 resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
