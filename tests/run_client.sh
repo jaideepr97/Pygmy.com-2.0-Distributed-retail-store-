@@ -1,4 +1,4 @@
-python3 consistency_test_2.py; cd .. &&
+python3 fault_tolerance_test.py; cd .. &&
 sleep .5
 curl http://elnux1.cs.umass.edu:34602/shutdown
 #curl http://0.0.0.0:34602/shutdown

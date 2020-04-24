@@ -174,4 +174,4 @@ def shutdown():
 Starting point of the application
 '''
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=sys.argv[1], debug=True)
+    app.run(host='0.0.0.0', port=sys.argv[1])
