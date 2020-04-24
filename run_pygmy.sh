@@ -20,4 +20,4 @@ ssh ${user}@elnux3.cs.umass.edu "sh -c 'cd ${remote_path}/lab-3-lab-3-rao-gupta/
 #ssh aayushgupta@elnux7.cs.umass.edu "sh -c 'cd cs677/lab-2-rao-gupta/tests; nohup chmod +x run_client.sh; nohup ./run_client.sh > /dev/null 2>&1 &'"
 echo Started Front End
 sleep 5
-#cd tests/ && chmod +x run_client.sh && ./run_client.sh
+cd tests/ && chmod +x run_client.sh && ./run_client.sh

@@ -25,7 +25,6 @@ with open('config.json') as f:
 current_port = str(sys.argv[1])
 replica_port = str(sys.argv[3])
 log_file = str(sys.argv[4])
-sys.stdout = open("catalog_B_out.txt", "w")
 '''
 This class defines the model for out catalog database, which stores the details
 about all the stock in Pygmy.com
@@ -232,7 +231,6 @@ This function is used to shut down the server
 
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
-    sys.stdout.close()
     shutdown_server()
     return 'Catalog Server shutting down...'
 

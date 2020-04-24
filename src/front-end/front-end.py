@@ -74,21 +74,19 @@ def respawn_servers():
         for replica in catalog_replicas_alive:
             if not catalog_replicas_alive[replica]:
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
-                print("====------catalog {} re-spawned-----=====".format(replica))
+                print("\n====------catalog {} re-spawned-----=====\n".format(replica))
                 time.sleep(5)
-                print("\nSending request to resync for catalog {}\n".format(replica))
-                print("\nUrl: "+catalog_urls[replica]+"/resync_catalog_db\n")
                 resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 while resync_response.status_code != 200:
                     print("\nRequest to resync failed, retrying for catalog {}...\n".format(replica))
                     time.sleep(1)
                     resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 print(
-                    "********** Re-synchronization of catalog DB for replica {} complete *************".format(replica))
+                    "\n********** Re-synchronization of catalog DB for replica {} complete *************\n".format(replica))
         for replica in order_replicas_alive:
             if not order_replicas_alive[replica]:
                 subprocess.call([str(order_respawn_script_commands[replica])], shell=True)
-                print("=====---order {} re-spawned----=====".format(replica))
+                print("\n=====---order {} re-spawned----=====\n".format(replica))
 
 
 def heartbeat(destination_server_url):
@@ -100,44 +98,44 @@ def heartbeat(destination_server_url):
             if heartbeat_response.status_code == 200:
 
                 if destination_server_url == catalog_urls['A']:
-                    print(" catalog_A: alive")
+                    print("\ncatalog_A: alive\n")
                     shared_flag_lock.acquire()
                     catalog_replicas_alive['A'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == catalog_urls['B']:
-                    print(" catalog_B: alive")
+                    print("\ncatalog_B: alive\n")
                     shared_flag_lock.acquire()
                     catalog_replicas_alive['B'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == order_urls['A']:
-                    print(" order_A: alive")
+                    print("\norder_A: alive\n")
                     shared_flag_lock.acquire()
                     order_replicas_alive['A'] = True
                     shared_flag_lock.release()
                 elif destination_server_url == order_urls['B']:
-                    print(" order_B: alive")
+                    print("\norder_B: alive\n")
                     shared_flag_lock.acquire()
                     order_replicas_alive['B'] = True
                     shared_flag_lock.release()
 
         except Exception:
             if destination_server_url == catalog_urls['A']:
-                print("--------- catalog_A: DEAD-------------")
+                print("\n--------- catalog_A: DEAD-------------\n")
                 shared_flag_lock.acquire()
                 catalog_replicas_alive['A'] = False
                 shared_flag_lock.release()
             elif destination_server_url == catalog_urls['B']:
-                print("--------- catalog_B: DEAD-------------")
+                print("\n--------- catalog_B: DEAD-------------\n")
                 shared_flag_lock.acquire()
                 catalog_replicas_alive['B'] = False
                 shared_flag_lock.release()
             elif destination_server_url == order_urls['A']:
-                print("--------- order_A: DEAD-------------")
+                print("\n--------- order_A: DEAD-------------\n")
                 shared_flag_lock.acquire()
                 order_replicas_alive['A'] = False
                 shared_flag_lock.release()
             elif destination_server_url == order_urls['B']:
-                print("--------- order_B: DEAD-------------")
+                print("\n--------- order_B: DEAD-------------\n")
                 shared_flag_lock.acquire()
                 order_replicas_alive['B'] = False
                 shared_flag_lock.release()
@@ -321,5 +319,4 @@ if __name__ == '__main__':
     order_B_heartbeat.start()
     respawn_server_thread = threading.Thread(target=respawn_servers)
     respawn_server_thread.start()
-    print('------------------2--------------------')
     app.run(host='0.0.0.0', port=34600)
