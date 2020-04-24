@@ -244,25 +244,30 @@ def heartbeat():
 
 @app.route('/resync_catalog_db', methods=['GET'])
 def resync_catalog_db():
+    print('Inside: resync catalog db')
     updated_db = requests.get(url=replica_host + ':' + replica_port + '/request_restore_catalog_db')
     updated_db_data = updated_db.json()['quantities']
+    print('Got response: resync catalog db')
     write_lock.acquire()
     catalog = db.session.query(Catalog).all()
     for c in catalog:
         c.quantity = updated_db_data[str(c.id)]
     db.session.commit()
     write_lock.release()
+    print('Returning from: resync catalog db')
     return '', 200
 
 
 @app.route('/request_restore_catalog_db', methods=['GET'])
 def request_restore_catalog_db():
+    print('Inside: request_restore_catalog_db')
     restore_quantities = {}
     write_lock.acquire()
     catalog = db.session.query(Catalog).all()
     for c in catalog:
         restore_quantities[c.id] = c.quantity
     write_lock.release()
+    print('Returning from: request_restore_catalog_db')
     return jsonify({'quantities': restore_quantities})
 
 '''
@@ -270,4 +275,4 @@ Starting point of the application
 '''
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=sys.argv[1], debug=True)
+    app.run(host='0.0.0.0', port=sys.argv[1])
