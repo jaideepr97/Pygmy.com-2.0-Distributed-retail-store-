@@ -40,11 +40,16 @@ order_replicas_alive = {'A': True, 'B': True}
 catalog_respawn_script_commands = {}
 order_respawn_script_commands = {}
 
+# if isLocal:
+#     catalog_respawn_script_commands = {'A': "nohup python3 catalogue/catalog_A/catalogue.py 34602 'sqlite:///catalog_A.db' 34612 'catalogue/catalog_A/catalog_A_log.txt' &",
+#                                        'B': "nohup python3 catalogue/catalog_B/catalogue.py 34612 'sqlite:///catalog_B.db' 34602 'catalogue/catalog_B/catalog_B_log.txt' &"}
+#     order_respawn_script_commands = {'A': "nohup python3 order/order_A/order.py 34601 'sqlite:///orders_A.db' 'order/order_A/order_A_log.txt' &",
+#                                      'B': "nohup python3 order/order_B/order.py 34611 'sqlite:///orders_B.db' 'order/order_B/order_B_log.txt' &"}
 
-catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh; ./respawn_catalogue_A.sh &',
-                                   'B': 'chmod +x respawn_catalogue_B.sh; ./respawn_catalogue_B.sh &'}
-order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh; ./respawn_order_A.sh &',
-                                 'B': 'chmod +x respawn_order_B.sh; ./respawn_order_B.sh &'}
+catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh && ./respawn_catalogue_A.sh &',
+                                   'B': 'chmod +x respawn_catalogue_B.sh && ./respawn_catalogue_B.sh &'}
+order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh && ./respawn_order_A.sh &',
+                                 'B': 'chmod +x respawn_order_B.sh && ./respawn_order_B.sh &'}
 
 last_order_server = 'A'
 last_catalog_server = 'A'
