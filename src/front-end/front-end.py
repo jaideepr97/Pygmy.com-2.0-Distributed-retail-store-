@@ -76,8 +76,10 @@ def respawn_servers():
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
                 print("====------catalog {} re-spawned-----=====".format(replica))
                 time.sleep(2)
+                print("\nSending request to resync for catalog {}\n".format(replica))
                 resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 while resync_response.status_code != 200:
+                    print("\nRequest to resync failed, retrying for catalog {}...\n".format(replica))
                     time.sleep(1)
                     resync_response = requests.get(url=catalog_urls[replica] + '/resync_catalog_db')
                 print(
