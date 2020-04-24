@@ -70,7 +70,7 @@ def shutdown_server():
 
 def respawn_servers():
     while True:
-        time.sleep(1)
+        time.sleep(2)
         for replica in catalog_replicas_alive:
             if not catalog_replicas_alive[replica]:
                 subprocess.call([str(catalog_respawn_script_commands[replica])], shell=True)
