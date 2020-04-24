@@ -54,7 +54,7 @@ order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh && ./respawn_
 last_order_server = 'A'
 last_catalog_server = 'A'
 log_file = str(sys.argv[1])
-print('------------------1--------------------')
+sys.stdout = open("front_end_out.txt", "w")
 
 '''
 This function is used to shut down the server
@@ -298,6 +298,7 @@ This function is used to shut down the server
 
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
+    sys.stdout.close()
     shutdown_server()
     return 'Front End Server shutting down...'
 

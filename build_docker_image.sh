@@ -1,4 +1,5 @@
 cd src &&
+python3 set_config.py 0 &&
 cd catalogue/catalog_A &&
 docker image build -t catalog-a . &&
 cd ../catalog_B &&
