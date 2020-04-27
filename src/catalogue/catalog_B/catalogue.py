@@ -9,11 +9,12 @@ import datetime
 from flask import request
 from flask import jsonify
 import json
+import socket
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
-
-db = SQLAlchemy(app)    # defining the sqlite database
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog_A.db'
+db = SQLAlchemy(app)  # defining the sqlite database
 write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
@@ -59,7 +60,6 @@ This function is used to shut down the server
 
 
 def shutdown_server():
-
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
@@ -73,7 +73,6 @@ This function is used to query by topic
 
 @app.route('/query_by_subject/<args>', methods=["GET"])
 def query_by_subject(args):
-
     # note the request start time
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
@@ -84,7 +83,9 @@ def query_by_subject(args):
 
     # dump the result in a JSON
     result = catalogs_schema.dump(catalogs)
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    result['catalog_host/ip'] = hostname + '/' + ip
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
     request_time = request_end - request_start
@@ -107,7 +108,6 @@ This function is used to query by item number
 
 @app.route('/query_by_item/<int:args>', methods=["GET"])
 def query_by_item(args):
-
     # note the request start time
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
@@ -120,7 +120,9 @@ def query_by_item(args):
     result = catalog_schema.dump(catalog)
     replica = 'catalog_a' if current_port == '34602' else 'catalog_b'
     result['replica'] = replica
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    result['catalog_host/ip'] = hostname + '/' + ip
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
     request_time = request_end - request_start
@@ -144,11 +146,11 @@ corresponding to the item number
 
 @app.route('/update/<int:args>', methods=["GET"])
 def update(args):
-
     # note the request start time
     # request_start = datetime.datetime.now()
     # request_id = request.values['request_id']
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
     # acquire a lock on the catalog db to update the item
     write_lock.acquire()
 
@@ -186,7 +188,7 @@ def update(args):
             # log_lock.release()
 
             # return success with remaining stock
-            return {'result': 0, 'remaining_stock': catalog.quantity}
+            return {'result': 0, 'remaining_stock': catalog.quantity, 'catalog_host/ip': hostname + '/' + ip}
 
     # quantity == 0, return failure
     else:
@@ -207,12 +209,11 @@ def update(args):
         log_lock.release()
 
         # return failure
-        return {'result': -1}
+        return {'result': -1, 'catalog_host/ip': hostname + '/' + ip}
 
 
 @app.route('/update_replica/<int:args>', methods=['GET'])
 def update_replica(args):
-
     try:
         catalog = db.session.query(Catalog).filter_by(id=args).with_for_update().first()
         catalog.quantity = request.values['quantity']
@@ -267,6 +268,7 @@ def request_restore_catalog_db():
     write_lock.release()
     print('Returning from: request_restore_catalog_db')
     return jsonify({'quantities': restore_quantities})
+
 
 '''
 Starting point of the application

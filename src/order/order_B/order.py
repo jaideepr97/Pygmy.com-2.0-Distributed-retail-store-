@@ -10,6 +10,7 @@ import threading
 from marshmallow import Schema, fields
 import json
 import time
+import socket
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
@@ -25,7 +26,8 @@ with open('config.json') as f:
     isLocal = True if host_details['location'] == 0 else False
 
 catalog_url = 'http://0.0.0.0' if isLocal else 'http://elnux1.cs.umass.edu'
-primary_path = 'primary_details.json' if isLocal else 'order/order_B/primary_details.json'
+primary_path = 'primary_details.json' if isLocal else 'order/order_A/primary_details.json'
+
 
 log_lock = threading.Lock()  # lock for calculating performance metrics
 
@@ -96,7 +98,8 @@ def buy(args):
         # form the query url and get the result
         port = str(primary_details[str(args)])
         query_url = catalog_url + ':' + port + '/query_by_item/' + str(args)
-
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
         request_success = False
         while not request_success:
             try:
@@ -141,18 +144,25 @@ def buy(args):
                         log_lock.release()
 
                         # return the result
-
-                        return {'result': 'Buy Successful', 'data': result}
+                        return {'result': 'Buy Successful', 'data': result, 'catalog_host/ip':update_data['catalog_host/ip'],
+                                  'order_host/ip': hostname+'/'+ip}
 
                     # if the item is not in stock
                     else:
                         # return failure
-                        return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+                        return {'result': 'Buy Failed!',
+                                'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0},
+                                'catalog_host/ip': update_data['catalog_host/ip'],
+                                'order_host/ip': hostname + '/' + ip
+                                }
                 # if the item is not in stock
                 else:
                     # return failure
-
-                    return {'result': 'Buy Failed!', 'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0}}
+                    return {'result': 'Buy Failed!',
+                            'data': {'book_name': query_data['result']['name'], 'item_number': args, 'remaining_stock': 0},
+                            'catalog_host/ip': update_data['catalog_host/ip'],
+                            'order_host/ip': hostname + '/' + ip
+                            }
 
             except Exception:
                 time.sleep(3)

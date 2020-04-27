@@ -9,6 +9,7 @@ import datetime
 from flask import request
 from flask import jsonify
 import json
+import socket
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
@@ -84,7 +85,9 @@ def query_by_subject(args):
 
     # dump the result in a JSON
     result = catalogs_schema.dump(catalogs)
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    result['catalog_host/ip'] = hostname + '/' + ip
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
     request_time = request_end - request_start
@@ -120,7 +123,9 @@ def query_by_item(args):
     result = catalog_schema.dump(catalog)
     replica = 'catalog_a' if current_port == '34602' else 'catalog_b'
     result['replica'] = replica
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    result['catalog_host/ip'] = hostname + '/' + ip
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
     request_time = request_end - request_start
@@ -148,7 +153,8 @@ def update(args):
     # note the request start time
     # request_start = datetime.datetime.now()
     # request_id = request.values['request_id']
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
     # acquire a lock on the catalog db to update the item
     write_lock.acquire()
 
@@ -186,7 +192,7 @@ def update(args):
             # log_lock.release()
 
             # return success with remaining stock
-            return {'result': 0, 'remaining_stock': catalog.quantity}
+            return {'result': 0, 'remaining_stock': catalog.quantity, 'catalog_host/ip': hostname + '/' + ip }
 
     # quantity == 0, return failure
     else:
@@ -207,7 +213,7 @@ def update(args):
         log_lock.release()
 
         # return failure
-        return {'result': -1}
+        return {'result': -1, 'catalog_host/ip': hostname + '/' + ip}
 
 
 @app.route('/update_replica/<int:args>', methods=['GET'])

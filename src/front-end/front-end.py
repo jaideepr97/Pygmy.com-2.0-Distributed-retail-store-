@@ -8,6 +8,7 @@ import time
 import subprocess
 import sys
 import json
+import socket
 
 app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
@@ -154,7 +155,8 @@ def search(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
     request_success = False
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
     while not request_success:
         # form the query url using load balancing (round robin)
         shared_flag_lock.acquire()
@@ -184,7 +186,9 @@ def search(args):
 
             # return the results
             request_success = True
-            return query_result.json()
+            result = query_result.json()
+            result['front_end_host/ip'] = hostname + '/' + ip
+            return result
         except Exception:
             time.sleep(3)
             pass
@@ -203,7 +207,8 @@ def lookup(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
     request_success = False
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
     while not request_success:
         # form the query url using load balancing (round robin)
         shared_flag_lock.acquire()
@@ -233,7 +238,9 @@ def lookup(args):
 
             # return the results
             request_success = True
-            return query_result.json()
+            result = query_result.json()
+            result['front_end_host/ip'] = hostname + '/' + ip
+            return result
         except Exception:
             time.sleep(3)
             pass
@@ -251,7 +258,8 @@ def buy(args):
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
     request_success = False
-
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
     # invalidate cache
     cache.delete_memoized(lookup, args)
 
@@ -286,7 +294,9 @@ def buy(args):
 
                 # return the results
                 request_success = True
-                return query_result.json()
+                result = query_result.json()
+                result['front_end_host/ip'] = hostname + '/' + ip
+                return result
         except Exception:
             time.sleep(3)
             pass
