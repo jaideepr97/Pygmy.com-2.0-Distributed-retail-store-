@@ -8,7 +8,10 @@ import json
 if __name__ == '__main__':
 
     edLab_url = 'http://elnux3.cs.umass.edu:34600/'
-    local_url = 'http://0.0.0.0:34600'
+    local_url = 'http://0.0.0.0:34600/'
+
+    url = local_url
+
     total_request_time = 0
     request_counter = 0
     file = open("consistency_test_1_output.txt", "w")
@@ -20,8 +23,11 @@ if __name__ == '__main__':
     for i, operation in enumerate(operations):
         request_id = uuid.uuid1()
         request_start = datetime.datetime.now()
-        query_url = edLab_url + operation
+
+        query_url = url + operation
+
         request_result = requests.get(url=query_url, data={'request_id': request_id})
+        print(request_result)
         file = open("consistency_test_1_output.txt", "a+")
         file.write(operation+'\n')
         data = json.loads(request_result.text)

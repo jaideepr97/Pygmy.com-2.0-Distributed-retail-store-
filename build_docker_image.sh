@@ -1,13 +1,13 @@
 cd src &&
 python3 set_config.py 0 &&
 cd catalogue/catalog_A &&
-docker image build -t catalog-a . &&
+sudo docker image build -t catalog-a . &&
 cd ../catalog_B &&
-docker image build -t catalog-b . &&
+sudo docker image build -t catalog-b . &&
 cd ../../front-end &&
-docker image build -t front-end . &&
+sudo docker image build -t front-end . &&
 cd ../order/order_A &&
-docker image build -t order-a . &&
+sudo docker image build -t order-a . &&
 cd ../order_B &&
-docker image build -t order-b . &&
+sudo docker image build -t order-b . &&
 cd ../../../

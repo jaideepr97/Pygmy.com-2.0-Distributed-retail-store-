@@ -7,7 +7,9 @@ import threading
 import json
 
 edLab_url = 'http://elnux3.cs.umass.edu:34600/'
-local_url = 'http://0.0.0.0:34600'
+local_url = 'http://0.0.0.0:34600/'
+
+url = local_url
 
 
 def client(id):
@@ -21,7 +23,9 @@ def client(id):
     for i, operation in enumerate(operations):
         request_id = uuid.uuid1()
         request_start = datetime.datetime.now()
-        query_url = edLab_url + operation
+
+        query_url = url + operation
+
         request_result = requests.get(url=query_url, data={'request_id': request_id})
         file = open("consistency_test_2_"+id+"_output.txt", "a+")
         file.write(operation+'\n')
