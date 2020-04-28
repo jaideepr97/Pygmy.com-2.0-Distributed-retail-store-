@@ -1,0 +1,144 @@
+lookup/1
+{
+  "result": {
+    "cost": 39.99,
+    "replica": "catalog_a",
+    "quantity": 850,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  }
+}
+buy/1
+{
+  "data": {
+    "total_price": 39.99,
+    "id": "yQNNqdrBCwRISWeo",
+    "book_name": "How to get a good grade in 677 in 20 minutes a day",
+    "remaining_stock": 849,
+    "item_number": 1,
+    "date_created": "2020-04-27T21:03:44.293120"
+  },
+  "result": "Buy Successful"
+}
+lookup/1
+{
+  "result": {
+    "cost": 39.99,
+    "replica": "catalog_a",
+    "quantity": 849,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  }
+}
+lookup/2
+{
+  "result": {
+    "cost": 49.99,
+    "replica": "catalog_a",
+    "quantity": 864,
+    "name": "RPCs for Dummies"
+  }
+}
+buy/2
+{
+  "data": {
+    "total_price": 49.99,
+    "id": "zFswPy7so54awksx",
+    "book_name": "RPCs for Dummies",
+    "remaining_stock": 863,
+    "item_number": 2,
+    "date_created": "2020-04-27T21:03:45.264781"
+  },
+  "result": "Buy Successful"
+}
+lookup/2
+{
+  "result": {
+    "cost": 49.99,
+    "replica": "catalog_b",
+    "quantity": 863,
+    "name": "RPCs for Dummies"
+  }
+}
+buy/3
+{
+  "data": {
+    "total_price": 59.99,
+    "id": "NUcnVHU35vWuqZXr",
+    "book_name": "Xen and the Art of Surviving Graduate School",
+    "remaining_stock": 864,
+    "item_number": 3,
+    "date_created": "2020-04-27T21:03:45.264781"
+  },
+  "result": "Buy Successful"
+}
+buy/4
+{
+  "data": {
+    "total_price": 69.99,
+    "id": "k0NzcoRAww9JSo4e",
+    "book_name": "Cooking for the Impatient Graduate Student",
+    "remaining_stock": 871,
+    "item_number": 4,
+    "date_created": "2020-04-27T21:05:39.163019"
+  },
+  "result": "Buy Successful"
+}
+buy/5
+{
+  "data": {
+    "total_price": 79.99,
+    "id": "tFFFEKtT50Hx9M42",
+    "book_name": "How to finish Project 3 on time",
+    "remaining_stock": 999,
+    "item_number": 5,
+    "date_created": "2020-04-27T21:03:45.264781"
+  },
+  "result": "Buy Successful"
+}
+buy/6
+{
+  "data": {
+    "total_price": 89.99,
+    "id": "mhPA9tBCV54d3Hg4",
+    "book_name": "Why theory classes are so hard",
+    "remaining_stock": 999,
+    "item_number": 6,
+    "date_created": "2020-04-27T21:05:39.163019"
+  },
+  "result": "Buy Successful"
+}
+lookup/3
+{
+  "result": {
+    "cost": 59.99,
+    "replica": "catalog_a",
+    "quantity": 864,
+    "name": "Xen and the Art of Surviving Graduate School"
+  }
+}
+lookup/4
+{
+  "result": {
+    "cost": 69.99,
+    "replica": "catalog_b",
+    "quantity": 871,
+    "name": "Cooking for the Impatient Graduate Student"
+  }
+}
+lookup/5
+{
+  "result": {
+    "cost": 79.99,
+    "replica": "catalog_a",
+    "quantity": 999,
+    "name": "How to finish Project 3 on time"
+  }
+}
+lookup/6
+{
+  "result": {
+    "cost": 89.99,
+    "replica": "catalog_b",
+    "quantity": 999,
+    "name": "Why theory classes are so hard"
+  }
+}

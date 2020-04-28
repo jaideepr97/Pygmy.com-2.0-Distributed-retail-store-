@@ -1,0 +1,1248 @@
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+--------- catalog_A: DEAD-------------
+
+====------catalog A re-spawned-----=====
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+--------- catalog_A: DEAD-------------
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+********** Re-synchronization of catalog DB for replica A complete *************
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+Buy request being handled by order A
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+Lookup request being handled by catalog A
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+--------- catalog_B: DEAD-------------
+
+====------catalog B re-spawned-----=====
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+--------- catalog_B: DEAD-------------
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+********** Re-synchronization of catalog DB for replica B complete *************
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+Buy request being handled by order B
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+Lookup request being handled by catalog B
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+--------- order_A: DEAD-------------
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+Assigned server unavailable, buy switching to available server order B
+
+=====---order A re-spawned----=====
+
+=====---order A re-spawned----=====
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+=====---order A re-spawned----=====
+
+=====---order A re-spawned----=====
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+=====---order A re-spawned----=====
+
+=====---order A re-spawned----=====
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+=====---order A re-spawned----=====
+
+=====---order A re-spawned----=====
+
+--------- order_A: DEAD-------------
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+=====---order A re-spawned----=====
+
+=====---order A re-spawned----=====
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+Buy request being handled by order A
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+Buy request being handled by order B
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+--------- order_B: DEAD-------------
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+=====---order B re-spawned----=====
+
+catalog_A: alive
+
+catalog_B: alive
+
+=====---order B re-spawned----=====
+
+order_A: alive
+
+=====---order B re-spawned----=====
+Buy request being handled by order A
+
+catalog_A: alive
+
+catalog_B: alive
+
+=====---order B re-spawned----=====
+
+order_A: alive
+
+=====---order B re-spawned----=====
+
+catalog_A: alive
+
+catalog_B: alive
+
+=====---order B re-spawned----=====
+
+order_A: alive
+
+=====---order B re-spawned----=====
+
+catalog_A: alive
+
+catalog_B: alive
+
+--------- order_B: DEAD-------------
+
+=====---order B re-spawned----=====
+
+order_A: alive
+
+=====---order B re-spawned----=====
+
+catalog_B: alive
+
+=====---order B re-spawned----=====
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+Lookup request being handled by catalog A
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+Lookup request being handled by catalog B
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+Lookup request being handled by catalog A
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+Lookup request being handled by catalog B
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+order_A: alive
+
+catalog_B: alive
+
+order_B: alive
+
+catalog_A: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+catalog_A: alive
+
+catalog_B: alive
+
+order_A: alive
+
+order_B: alive
+
+catalog_B: alive
+
+order_A: alive
+
+catalog_A: alive
+
+order_B: alive

@@ -1,0 +1,24 @@
+
+Request: lookup/2
+request time: 223.747
+Request: lookup/2
+request time: 20.325
+Request: lookup/2
+request time: 20.089
+Request: lookup/2
+request time: 20.461
+Request: search/distributed%20systems
+request time: 200.185
+Request: search/distributed%20systems
+request time: 20.774
+Request: lookup/2
+request time: 20.229
+Request: search/distributed%20systems
+request time: 21.215
+Request: lookup/2
+request time: 21.672
+Request: lookup/2
+request time: 20.658
+Average request processing time: 58.93550000000001
+
+End to end request processing time: 589.3550000000001
