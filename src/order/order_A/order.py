@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
 
 db = SQLAlchemy(app)  # defining the sqlite db
 log_file = str(sys.argv[3])
+
 # defining various urls
 
 catalog_url = None
@@ -36,13 +37,11 @@ with open(primary_path) as f:
   primary_details = json.load(f)
 
 
-'''
-This class defines the model for our Orders database, which stores the
-details of all the orders that are successful.
-'''
-
-
 class PurchaseRequest(db.Model):
+    """
+    This class defines the model for our Orders database, which stores the
+    details of all the orders that are successful.
+    """
     id = db.Column(db.String(16), primary_key=True)  # unique id
     book_name = db.Column(db.String(16))  # name of the item
     item_number = db.Column(db.Integer, nullable=False)  # item number
@@ -51,13 +50,11 @@ class PurchaseRequest(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow())  # date and time of the order
 
 
-'''
-This class defines the schema for our order database,
-which is used to create a JSON dump from an sqlite query object
-'''
-
-
 class PurchaseRequestSchema(Schema):
+    """
+    This class defines the schema for our order database,
+    which is used to create a JSON dump from an sqlite query object
+    """
     id = fields.Str(dump_only=True)
     book_name = fields.Str(dump_only=True)
     item_number = fields.Int()
@@ -66,12 +63,11 @@ class PurchaseRequestSchema(Schema):
     date_created = fields.DateTime()
 
 
-'''
-This function is used to shut down the server
-'''
-
-
 def shutdown_server():
+    """
+    This function is used to shut down the server
+    :return: response
+    """
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
@@ -80,16 +76,20 @@ def shutdown_server():
 
 @app.route('/heartbeat', methods=['GET'])
 def heartbeat():
+    """
+    This function receives the heartbeat from front end and sends a response
+    :return: response
+    """
     return '', 200
-
-'''
-This function facilitates a buy request
-'''
 
 
 @app.route('/buy/<int:args>')
 def buy(args):
-
+    """
+    This function facilitates a buy request
+    :param args: item id
+    :return: result
+    """
     # note the request start time
     request_start = datetime.now()
     request_id = request.values['request_id']
@@ -166,22 +166,20 @@ def buy(args):
 
             except Exception:
                 time.sleep(3)
-                # return {'result': 'Server Error'}
-
-
-
-'''
-This function is used to shut down the server
-'''
 
 
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
+    """
+    This function is used to shut down the server
+    :return: response
+    """
     shutdown_server()
     return 'Order Server shutting down...'
 
-'''
-Starting point of the application
-'''
+
 if __name__ == '__main__':
+    '''
+    Starting point of the application
+    '''
     app.run(host='0.0.0.0', port=sys.argv[1])

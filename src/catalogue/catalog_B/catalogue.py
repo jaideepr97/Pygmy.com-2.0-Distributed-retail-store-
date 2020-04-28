@@ -13,7 +13,6 @@ import socket
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(sys.argv[2])
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog_A.db'
 db = SQLAlchemy(app)  # defining the sqlite database
 write_lock = threading.Lock()  # lock for updating the database
 log_lock = threading.Lock()  # lock for calculating performance metrics
@@ -26,13 +25,13 @@ with open('config.json') as f:
 current_port = str(sys.argv[1])
 replica_port = str(sys.argv[3])
 log_file = str(sys.argv[4])
-'''
-This class defines the model for out catalog database, which stores the details
-about all the stock in Pygmy.com
-'''
 
 
 class Catalog(db.Model):
+    """
+    This class defines the model for out catalog database, which stores the details
+    about all the stock in Pygmy.com
+    """
     id = db.Column(db.Integer, primary_key=True)  # item number
     name = db.Column(db.String(200), nullable=False)  # name of the book
     quantity = db.Column(db.Integer, nullable=False)  # total available stock
@@ -40,13 +39,11 @@ class Catalog(db.Model):
     topic = db.Column(db.String(100), nullable=False)  # topic of the item
 
 
-'''
-This class defines the schema for our catalog database,
-which is used to create a JSON dump from an sqlite query object
-'''
-
-
 class CatalogSchema(Schema):
+    """
+    This class defines the schema for our catalog database,
+    which is used to create a JSON dump from an sqlite query object
+    """
     id = fields.Int(dump_only=True)
     name = fields.Str()
     quantity = fields.Int()
@@ -54,25 +51,24 @@ class CatalogSchema(Schema):
     topic = fields.Str()
 
 
-'''
-This function is used to shut down the server
-'''
-
-
 def shutdown_server():
+    """
+    This function is used to shut down the server
+    :return:
+    """
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
 
 
-'''
-This function is used to query by topic
-'''
-
-
 @app.route('/query_by_subject/<args>', methods=["GET"])
 def query_by_subject(args):
+    """
+    This function is used to query by topic
+    :param args: topic
+    :return: result
+    """
     # note the request start time
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
@@ -101,13 +97,13 @@ def query_by_subject(args):
     return {'results': result}
 
 
-'''
-This function is used to query by item number
-'''
-
-
 @app.route('/query_by_item/<int:args>', methods=["GET"])
 def query_by_item(args):
+    """
+    This function is used to query by item number
+    :param args: item id
+    :return: result
+    """
     # note the request start time
     request_start = datetime.datetime.now()
     request_id = request.values['request_id']
@@ -138,17 +134,14 @@ def query_by_item(args):
     return {'result': result}
 
 
-'''
-This function is used to update the data of the item 
-corresponding to the item number
-'''
-
-
 @app.route('/update/<int:args>', methods=["GET"])
 def update(args):
-    # note the request start time
-    # request_start = datetime.datetime.now()
-    # request_id = request.values['request_id']
+    """
+    This function is used to update the data of the item
+    corresponding to the item number
+    :param args: item id
+    :return: result
+    """
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
     # acquire a lock on the catalog db to update the item
@@ -176,17 +169,6 @@ def update(args):
         finally:
             write_lock.release()
 
-            # note request end time and calculate difference
-            # request_end = datetime.datetime.now()
-            # request_time = request_end - request_start
-
-            # acquire a lock on the file and write the time taken
-            # log_lock.acquire()
-            # file = open(log_file, "a+")
-            # file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-            # file.close()
-            # log_lock.release()
-
             # return success with remaining stock
             return {'result': 0, 'remaining_stock': catalog.quantity, 'catalog_host/ip': hostname + '/' + ip}
 
@@ -197,23 +179,17 @@ def update(args):
         db.session.commit()
         write_lock.release()
 
-        # note request end time and calculate difference
-        request_end = datetime.datetime.now()
-        request_time = request_end - request_start
-
-        # acquire a lock on the file and write the time taken
-        log_lock.acquire()
-        file = open(log_file, "a+")
-        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-        file.close()
-        log_lock.release()
-
         # return failure
         return {'result': -1, 'catalog_host/ip': hostname + '/' + ip}
 
 
 @app.route('/update_replica/<int:args>', methods=['GET'])
 def update_replica(args):
+    """
+    This function is used to update the replica after db update
+    :param args: the db contents
+    :return: response
+    """
     try:
         catalog = db.session.query(Catalog).filter_by(id=args).with_for_update().first()
         catalog.quantity = request.values['quantity']
@@ -225,24 +201,31 @@ def update_replica(args):
         return {'result': 0}
 
 
-'''
-This function is used to shut down the server
-'''
-
-
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
+    """
+    This function is used to shut down the server
+    :return: response
+    """
     shutdown_server()
     return 'Catalog Server shutting down...'
 
 
 @app.route('/heartbeat', methods=['GET'])
 def heartbeat():
+    """
+    This function receives the heartbeat and responds
+    :return: response
+    """
     return '', 200
 
 
 @app.route('/resync_catalog_db', methods=['GET'])
 def resync_catalog_db():
+    """
+    This function is used to resync the database after restart
+    :return: response
+    """
     print('Inside: resync catalog db')
     updated_db = requests.get(url=replica_host + ':' + replica_port + '/request_restore_catalog_db')
     updated_db_data = updated_db.json()['quantities']
@@ -259,6 +242,10 @@ def resync_catalog_db():
 
 @app.route('/request_restore_catalog_db', methods=['GET'])
 def request_restore_catalog_db():
+    """
+    This function sends the entire db to the other replica to resync after a failure
+    :return: db contents
+    """
     print('Inside: request_restore_catalog_db')
     restore_quantities = {}
     write_lock.acquire()
@@ -270,9 +257,8 @@ def request_restore_catalog_db():
     return jsonify({'quantities': restore_quantities})
 
 
-'''
-Starting point of the application
-'''
-
 if __name__ == '__main__':
+    """
+    Starting point of the application
+    """
     app.run(host='0.0.0.0', port=sys.argv[1])

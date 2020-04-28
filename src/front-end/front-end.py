@@ -13,9 +13,9 @@ import socket
 app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
-'''
+"""
 Defining various urls
-'''
+"""
 isLocal = False
 catalog_urls = {}
 order_urls = {}
@@ -41,12 +41,6 @@ order_replicas_alive = {'A': True, 'B': True}
 catalog_respawn_script_commands = {}
 order_respawn_script_commands = {}
 
-# if isLocal:
-#     catalog_respawn_script_commands = {'A': "nohup python3 catalogue/catalog_A/catalogue.py 34602 'sqlite:///catalog_A.db' 34612 'catalogue/catalog_A/catalog_A_log.txt' &",
-#                                        'B': "nohup python3 catalogue/catalog_B/catalogue.py 34612 'sqlite:///catalog_B.db' 34602 'catalogue/catalog_B/catalog_B_log.txt' &"}
-#     order_respawn_script_commands = {'A': "nohup python3 order/order_A/order.py 34601 'sqlite:///orders_A.db' 'order/order_A/order_A_log.txt' &",
-#                                      'B': "nohup python3 order/order_B/order.py 34611 'sqlite:///orders_B.db' 'order/order_B/order_B_log.txt' &"}
-
 catalog_respawn_script_commands = {'A': 'chmod +x respawn_catalogue_A.sh && ./respawn_catalogue_A.sh &',
                                    'B': 'chmod +x respawn_catalogue_B.sh && ./respawn_catalogue_B.sh &'}
 order_respawn_script_commands = {'A': 'chmod +x respawn_order_A.sh && ./respawn_order_A.sh &',
@@ -57,12 +51,12 @@ last_catalog_server = 'A'
 log_file = str(sys.argv[1])
 sys.stdout = open("front_end_out.txt", "w")
 
-'''
-This function is used to shut down the server
-'''
-
 
 def shutdown_server():
+    """
+    This function is used to shut down the server
+    :return: response
+    """
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
@@ -70,6 +64,10 @@ def shutdown_server():
 
 
 def respawn_servers():
+    """
+    This function respawns failed servers
+    :return: none
+    """
     while True:
         time.sleep(2)
         for replica in catalog_replicas_alive:
@@ -91,6 +89,11 @@ def respawn_servers():
 
 
 def heartbeat(destination_server_url):
+    """
+    This function sends periodic heartbeat to other servers
+    :param destination_server_url:
+    :return: none
+    """
     while True:
         try:
             time.sleep(1)
@@ -142,14 +145,14 @@ def heartbeat(destination_server_url):
                 shared_flag_lock.release()
 
 
-'''
-This function is used to search by topic
-'''
-
-
 @app.route('/search/<args>', methods=["GET"])
 @cache.memoize()
 def search(args):
+    """
+    This function is used to search by topic
+    :param args: topic
+    :return: result
+    """
     global last_catalog_server
     # note the starting time of the request
     request_start = datetime.datetime.now()
@@ -194,14 +197,14 @@ def search(args):
             pass
 
 
-'''
-This function is used to query by item number
-'''
-
-
 @app.route('/lookup/<args>', methods=["GET"])
 @cache.memoize()
 def lookup(args):
+    """
+        This function is used to query by item number
+        :param args: item id
+        :return: result
+    """
     global last_catalog_server
     # note the starting time of the request
     request_start = datetime.datetime.now()
@@ -246,13 +249,13 @@ def lookup(args):
             pass
 
 
-'''
-This function is used to send a buy request
-'''
-
-
 @app.route('/buy/<args>', methods=["GET"])
 def buy(args):
+    """
+   This function is used to send a buy request
+   :param args: item id
+   :return: result
+   """
     global last_order_server
     # note the starting time of the request
     request_start = datetime.datetime.now()
@@ -302,23 +305,21 @@ def buy(args):
             pass
 
 
-'''
-This function is used to shut down the server
-'''
-
-
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
+    """
+    This function is used to shut down the server
+    :return: response
+    """
     sys.stdout.close()
     shutdown_server()
     return 'Front End Server shutting down...'
 
 
-'''
-Starting point of the application
-'''
 if __name__ == '__main__':
-
+    '''
+    Starting point of the application
+    '''
     catalog_A_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['A'],))
     catalog_A_heartbeat.start()
     catalog_B_heartbeat = threading.Thread(target=heartbeat, args=(catalog_urls['B'],))
