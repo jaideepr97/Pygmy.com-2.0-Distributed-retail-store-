@@ -1,0 +1,9 @@
+
+Inside: resync catalog db
+Got response: resync catalog db
+Returning from: resync catalog db
+Inside: request_restore_catalog_db
+Returning from: request_restore_catalog_db
+Replica updated for id: 2
+Replica updated for id: 4
+Replica updated for id: 6
