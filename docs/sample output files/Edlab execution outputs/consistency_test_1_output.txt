@@ -1,0 +1,74 @@
+lookup/2
+{
+  "result": {
+    "replica": "catalog_a",
+    "cost": 49.99,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 877,
+    "name": "RPCs for Dummies"
+  },
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+buy/2
+{
+  "data": {
+    "item_number": 2,
+    "id": "EAIyRvjFuNCzBein",
+    "remaining_stock": 876,
+    "book_name": "RPCs for Dummies",
+    "total_price": 49.99,
+    "date_created": "2020-04-28T02:51:23.375675"
+  },
+  "result": "Buy Successful",
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/2
+{
+  "result": {
+    "replica": "catalog_b",
+    "cost": 49.99,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 876,
+    "name": "RPCs for Dummies"
+  },
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/1
+{
+  "result": {
+    "replica": "catalog_a",
+    "cost": 39.99,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 901,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  },
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+buy/1
+{
+  "data": {
+    "item_number": 1,
+    "id": "IXGXNaKepSQvP9MO",
+    "remaining_stock": 900,
+    "book_name": "How to get a good grade in 677 in 20 minutes a day",
+    "total_price": 39.99,
+    "date_created": "2020-04-28T02:51:24.295086"
+  },
+  "result": "Buy Successful",
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/1
+{
+  "result": {
+    "replica": "catalog_b",
+    "cost": 39.99,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 900,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  },
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
