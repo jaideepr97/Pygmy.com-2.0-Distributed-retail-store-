@@ -1,0 +1,74 @@
+lookup/3
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "cost": 59.99,
+    "replica": "catalog_a",
+    "name": "Xen and the Art of Surviving Graduate School",
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 879
+  }
+}
+buy/3
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": "Buy Successful",
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "data": {
+    "remaining_stock": 877,
+    "id": "WxZCRVALwfgfh8SB",
+    "date_created": "2020-04-28T02:51:23.375675",
+    "item_number": 3,
+    "book_name": "Xen and the Art of Surviving Graduate School",
+    "total_price": 59.99
+  }
+}
+lookup/3
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "cost": 59.99,
+    "replica": "catalog_b",
+    "name": "Xen and the Art of Surviving Graduate School",
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 877
+  }
+}
+lookup/4
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "cost": 69.99,
+    "replica": "catalog_a",
+    "name": "Cooking for the Impatient Graduate Student",
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 902
+  }
+}
+buy/4
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": "Buy Successful",
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "data": {
+    "remaining_stock": 900,
+    "id": "1jOEhQ3pWZSGNaqU",
+    "date_created": "2020-04-28T02:51:24.295086",
+    "item_number": 4,
+    "book_name": "Cooking for the Impatient Graduate Student",
+    "total_price": 69.99
+  }
+}
+lookup/4
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "cost": 69.99,
+    "replica": "catalog_a",
+    "name": "Cooking for the Impatient Graduate Student",
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "quantity": 900
+  }
+}

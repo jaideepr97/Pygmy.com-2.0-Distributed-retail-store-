@@ -1,0 +1,178 @@
+lookup/1
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 900,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_b",
+    "cost": 39.99,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  }
+}
+buy/1
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 1,
+    "remaining_stock": 899,
+    "id": "d3rltRNfA7K1oOW7",
+    "book_name": "How to get a good grade in 677 in 20 minutes a day",
+    "date_created": "2020-04-28T02:51:23.375675",
+    "total_price": 39.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/1
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 899,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_b",
+    "cost": 39.99,
+    "name": "How to get a good grade in 677 in 20 minutes a day"
+  }
+}
+lookup/2
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 876,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_b",
+    "cost": 49.99,
+    "name": "RPCs for Dummies"
+  }
+}
+buy/2
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 2,
+    "remaining_stock": 875,
+    "id": "mxCRI6UxaRZezx9X",
+    "book_name": "RPCs for Dummies",
+    "date_created": "2020-04-28T02:51:24.295086",
+    "total_price": 49.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/2
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 875,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_a",
+    "cost": 49.99,
+    "name": "RPCs for Dummies"
+  }
+}
+buy/3
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 3,
+    "remaining_stock": 876,
+    "id": "12wmzCBC31J4tjmJ",
+    "book_name": "Xen and the Art of Surviving Graduate School",
+    "date_created": "2020-04-28T02:51:24.295086",
+    "total_price": 59.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+buy/4
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 4,
+    "remaining_stock": 899,
+    "id": "ZhyuOH7OlRgu1qjG",
+    "book_name": "Cooking for the Impatient Graduate Student",
+    "date_created": "2020-04-28T02:54:32.711408",
+    "total_price": 69.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+buy/5
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 5,
+    "remaining_stock": 999,
+    "id": "DJkHeYjxDA9bXugm",
+    "book_name": "How to finish Project 3 on time",
+    "date_created": "2020-04-28T02:51:24.295086",
+    "total_price": 79.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+buy/6
+{
+  "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+  "result": "Buy Successful",
+  "data": {
+    "item_number": 6,
+    "remaining_stock": 999,
+    "id": "DsHedLwzn0GSDEio",
+    "book_name": "Why theory classes are so hard",
+    "date_created": "2020-04-28T02:54:32.711408",
+    "total_price": 89.99
+  },
+  "order_host/ip": "elnux2.cs.umass.edu/128.119.243.164",
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168"
+}
+lookup/3
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 876,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_b",
+    "cost": 59.99,
+    "name": "Xen and the Art of Surviving Graduate School"
+  }
+}
+lookup/4
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 899,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_a",
+    "cost": 69.99,
+    "name": "Cooking for the Impatient Graduate Student"
+  }
+}
+lookup/5
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 999,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_b",
+    "cost": 79.99,
+    "name": "How to finish Project 3 on time"
+  }
+}
+lookup/6
+{
+  "front_end_host/ip": "elnux3.cs.umass.edu/128.119.243.168",
+  "result": {
+    "quantity": 999,
+    "catalog_host/ip": "elnux1.cs.umass.edu/128.119.243.147",
+    "replica": "catalog_a",
+    "cost": 89.99,
+    "name": "Why theory classes are so hard"
+  }
+}
