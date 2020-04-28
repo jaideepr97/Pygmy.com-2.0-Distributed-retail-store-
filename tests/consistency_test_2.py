@@ -20,29 +20,30 @@ def client(id):
     file = open("consistency_test_2_"+id+"_metrics.txt", "w")
     file.close()
     operations = ['lookup/3', 'buy/3', 'lookup/3', 'lookup/4', 'buy/4', 'lookup/4']
-    for i, operation in enumerate(operations):
-        request_id = uuid.uuid1()
-        request_start = datetime.datetime.now()
+    for _ in range(10):
+        for i, operation in enumerate(operations):
+            request_id = uuid.uuid1()
+            request_start = datetime.datetime.now()
 
-        query_url = url + operation
+            query_url = url + operation
 
-        request_result = requests.get(url=query_url, data={'request_id': request_id})
-        print(request_result)
-        file = open("consistency_test_2_"+id+"_output.txt", "a+")
-        file.write(operation+'\n')
-        data = json.loads(request_result.text)
-        file.write(json.dumps(data, indent=2))
-        file.write('\n')
-        file.close()
-        request_end = datetime.datetime.now()
-        request_time = request_end - request_start
-        total_request_time = total_request_time + (request_time.microseconds / 1000)
-        request_counter = request_counter + 1
-        file = open("consistency_test_2_"+id+"_metrics.txt", "a+")
-        file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
-        file.close()
-        print('Sent request ' + str(i+1))
-        time.sleep(1)
+            request_result = requests.get(url=query_url, data={'request_id': request_id})
+            print(request_result)
+            file = open("consistency_test_2_"+id+"_output.txt", "a+")
+            file.write(operation+'\n')
+            data = json.loads(request_result.text)
+            file.write(json.dumps(data, indent=2))
+            file.write('\n')
+            file.close()
+            request_end = datetime.datetime.now()
+            request_time = request_end - request_start
+            total_request_time = total_request_time + (request_time.microseconds / 1000)
+            request_counter = request_counter + 1
+            file = open("consistency_test_2_"+id+"_metrics.txt", "a+")
+            file.write("{} \t\t\t {}\n".format(request_id, (request_time.microseconds / 1000)))
+            file.close()
+            print('Sent request ' + str(request_counter))
+            time.sleep(1)
 
     file = open("consistency_test_2_"+id+"_metrics.txt", "a+")
     file.write("Average request processing time: {}\n".format(total_request_time/request_counter))

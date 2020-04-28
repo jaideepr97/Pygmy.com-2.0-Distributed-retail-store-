@@ -1,3 +1,5 @@
+python3 caching_test.py &&
+sleep 2
 python3 consistency_test_1.py &&
 sleep 2
 python3 consistency_test_2.py &&
