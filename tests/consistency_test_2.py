@@ -27,6 +27,7 @@ def client(id):
         query_url = url + operation
 
         request_result = requests.get(url=query_url, data={'request_id': request_id})
+        print(request_result)
         file = open("consistency_test_2_"+id+"_output.txt", "a+")
         file.write(operation+'\n')
         data = json.loads(request_result.text)

@@ -58,6 +58,7 @@ def client():
         # query_url = local_url + '/' + str(operation) + '/' + str(topic)
         print('Request: ' + operation)
         request_result = requests.get(url=query_url, data={'request_id': request_id})
+        print(request_result)
         file = open("fault_tolerance_test_output.txt", "a+")
         file.write(operation+'\n')
         data = json.loads(request_result.text)
