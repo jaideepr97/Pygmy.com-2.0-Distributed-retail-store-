@@ -10,17 +10,17 @@ import json
 operations = ['lookup/1', 'buy/1', 'lookup/1', 'lookup/2', 'buy/2', 'lookup/2', 'buy/3', 'buy/4', 'buy/5',
               'buy/6', 'lookup/3', 'lookup/4', 'lookup/5', 'lookup/6']
 
-# frontend_url = 'http://elnux3.cs.umass.edu:34600/'
-# catalog_a_url = 'http://elnux1.cs.umass.edu:34602/shutdown'
-# catalog_b_url = 'http://elnux1.cs.umass.edu:34612/shutdown'
-# order_a_url = 'http://elnux2.cs.umass.edu:34601/shutdown'
-# order_b_url = 'http://elnux2.cs.umass.edu:34611/shutdown'
+frontend_url = 'http://elnux3.cs.umass.edu:34600/'
+catalog_a_url = 'http://elnux1.cs.umass.edu:34602/shutdown'
+catalog_b_url = 'http://elnux1.cs.umass.edu:34612/shutdown'
+order_a_url = 'http://elnux2.cs.umass.edu:34601/shutdown'
+order_b_url = 'http://elnux2.cs.umass.edu:34611/shutdown'
 
-frontend_url = 'http://0.0.0.0:34600/'
-catalog_a_url = 'http://0.0.0.0:34602/shutdown'
-catalog_b_url = 'http://0.0.0.0:34612/shutdown'
-order_a_url = 'http://0.0.0.0:34601/shutdown'
-order_b_url = 'http://0.0.0.0:34611/shutdown'
+# frontend_url = 'http://0.0.0.0:34600/'
+# catalog_a_url = 'http://0.0.0.0:34602/shutdown'
+# catalog_b_url = 'http://0.0.0.0:34612/shutdown'
+# order_a_url = 'http://0.0.0.0:34601/shutdown'
+# order_b_url = 'http://0.0.0.0:34611/shutdown'
 # local_url = 'http://0.0.0.0:34600'
 
 

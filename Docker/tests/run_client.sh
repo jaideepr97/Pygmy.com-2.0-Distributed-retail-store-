@@ -1,100 +1,100 @@
 cd caching_test/
 python3 caching_test.py &&
-sudo docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
-sudo docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_output.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_log.txt &&
+docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
+docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
+docker exec front-end rm -rf /src/front_end_server_output.txt &&
+docker exec front-end rm -rf /src/front_end_server_log.txt &&
 
-sudo docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
-sudo docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
+docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
+docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
 
-sudo docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
-sudo docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
+docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
+docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
 
-sudo docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
-sudo docker exec order-a rm -rf /src/order_A_log.txt &&
+docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
+docker exec order-a rm -rf /src/order_A_log.txt &&
 
-sudo docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
-sudo docker exec order-b rm -rf /src/order_B_log.txt &&
+docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
+docker exec order-b rm -rf /src/order_B_log.txt &&
 
 sleep 2
 cd ../consistency_test_1/
 python3 consistency_test_1.py &&
 
-sudo docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
-sudo docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_output.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_log.txt &&
+docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
+docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
+docker exec front-end rm -rf /src/front_end_server_output.txt &&
+docker exec front-end rm -rf /src/front_end_server_log.txt &&
 
-sudo docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
-sudo docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
+docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
+docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
 
-sudo docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
-sudo docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
+docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
+docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
 
-sudo docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
-sudo docker exec order-a rm -rf /src/order_A_log.txt &&
+docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
+docker exec order-a rm -rf /src/order_A_log.txt &&
 
-sudo docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
-sudo docker exec order-b rm -rf /src/order_B_log.txt &&
+docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
+docker exec order-b rm -rf /src/order_B_log.txt &&
 
 sleep 2
 cd ../consistency_test_2/
 python3 consistency_test_2.py &&
 
-sudo docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
-sudo docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_output.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_log.txt &&
+docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
+docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
+docker exec front-end rm -rf /src/front_end_server_output.txt &&
+docker exec front-end rm -rf /src/front_end_server_log.txt &&
 
-sudo docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
-sudo docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
+docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
+docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
 
-sudo docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
-sudo docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
+docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
+docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
 
-sudo docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
-sudo docker exec order-a rm -rf /src/order_A_log.txt &&
+docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
+docker exec order-a rm -rf /src/order_A_log.txt &&
 
-sudo docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
-sudo docker exec order-b rm -rf /src/order_B_log.txt &&
+docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
+docker exec order-b rm -rf /src/order_B_log.txt &&
 
 sleep 10
 cd ../fault_tolerance_test/
 python3 fault_tolerance_test.py &&
 y
-sudo docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
-sudo docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_output.txt &&
-sudo docker exec front-end rm -rf /src/front_end_server_log.txt &&
+docker cp front-end:/src/front_end_server_output.txt front_end_server_output.txt &&
+docker cp front-end:/src/front_end_server_log.txt front_end_server_log.txt &&
+docker exec front-end rm -rf /src/front_end_server_output.txt &&
+docker exec front-end rm -rf /src/front_end_server_log.txt &&
 
-sudo docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
-sudo docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
-sudo docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
+docker cp catalog-a:/src/catalog_A_output.txt catalog_A_output.txt &&
+docker cp catalog-a:/src/catalog_A_log.txt catalog_A_log.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_output.txt &&
+docker exec catalog-a rm -rf /src/catalog_A_log.txt &&
 
-sudo docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
-sudo docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
-sudo docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
+docker cp catalog-b:/src/catalog_B_output.txt catalog_B_output.txt &&
+docker cp catalog-b:/src/catalog_B_log.txt catalog_B_log.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_output.txt &&
+docker exec catalog-b rm -rf /src/catalog_B_log.txt &&
 
-sudo docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
-sudo docker exec order-a rm -rf /src/order_A_log.txt &&
+docker cp order-a:/src/order_A_log.txt order_A_log.txt &&
+docker exec order-a rm -rf /src/order_A_log.txt &&
 
-sudo docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
-sudo docker exec order-b rm -rf /src/order_B_log.txt &&
+docker cp order-b:/src/order_B_log.txt order_B_log.txt &&
+docker exec order-b rm -rf /src/order_B_log.txt &&
 
 cd .. &&
 sleep 2

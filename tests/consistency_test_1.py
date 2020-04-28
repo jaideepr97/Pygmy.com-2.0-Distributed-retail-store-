@@ -10,7 +10,7 @@ if __name__ == '__main__':
     edLab_url = 'http://elnux3.cs.umass.edu:34600/'
     local_url = 'http://0.0.0.0:34600/'
 
-    url = local_url
+    url = edLab_url
 
     total_request_time = 0
     request_counter = 0

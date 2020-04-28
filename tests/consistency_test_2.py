@@ -9,7 +9,7 @@ import json
 edLab_url = 'http://elnux3.cs.umass.edu:34600/'
 local_url = 'http://0.0.0.0:34600/'
 
-url = local_url
+url = edLab_url
 
 
 def client(id):
