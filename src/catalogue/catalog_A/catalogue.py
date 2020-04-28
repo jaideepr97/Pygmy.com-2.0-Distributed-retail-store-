@@ -87,7 +87,7 @@ def query_by_subject(args):
     result = catalogs_schema.dump(catalogs)
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
-    result['catalog_host/ip'] = hostname + '/' + ip
+    result.append({'catalog_host/ip':  hostname + '/' + ip})
     # note the request end time and calculate the difference
     request_end = datetime.datetime.now()
     request_time = request_end - request_start
